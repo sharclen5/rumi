@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rumi/models/baby.dart';
+import 'package:rumi/screens/home/baby_tile.dart';
 
 class BabyList extends StatefulWidget {
   const BabyList({super.key});
@@ -12,17 +13,13 @@ class BabyList extends StatefulWidget {
 class _BabyListState extends State<BabyList> {
   @override
   Widget build(BuildContext context) {
-    final babies = Provider.of<List<Baby?>>(context);
-    babies.forEach((baby) {
-      if (baby != null) {
-        debugPrint(baby.name);
-        debugPrint(baby.age.toString());
-        debugPrint(baby.gender);
-        debugPrint(baby.weight.toString());
-        debugPrint(baby.height.toString());
-      }
-    });
+    final babies = Provider.of<List<Baby>>(context);
 
-    return const Placeholder();
+    return ListView.builder(
+      itemCount: babies.length,
+      itemBuilder: (context, index) {
+        return BabyTile(baby: babies[index]);
+      },
+    );
   }
 }

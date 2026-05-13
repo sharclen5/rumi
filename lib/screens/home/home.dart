@@ -20,7 +20,19 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Baby?>>.value(
+    void _showSettingsPanel() {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+            child: Text('Bottom Sheet'),
+          );
+        },
+      );
+    }
+
+    return StreamProvider<List<Baby>>.value(
       value: DatabaseService(uid: '').babies,
       initialData: [],
       child: Scaffold(
@@ -31,11 +43,16 @@ class Home extends StatelessWidget {
           elevation: 0.0,
           actions: <Widget>[
             TextButton.icon(
+              icon: Icon(Icons.person, color: Colors.white),
+              label: Text('Logout', style: TextStyle(color: Colors.white)),
               onPressed: () async {
                 await _auth.signOut();
               },
-              icon: Icon(Icons.person, color: Colors.white),
-              label: Text('Logout', style: TextStyle(color: Colors.white)),
+            ),
+            TextButton.icon(
+              icon: Icon(Icons.settings, color: Colors.white),
+              label: Text('Settings', style: TextStyle(color: Colors.white)),
+              onPressed: () => _showSettingsPanel(),
             ),
           ],
         ),
