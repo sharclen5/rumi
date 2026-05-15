@@ -53,16 +53,24 @@ class Home extends StatelessWidget {
                 await _auth.signOut();
               },
             ),
-            TextButton.icon(
-              icon: Icon(Icons.settings, color: Colors.white),
-              label: Text('Settings', style: TextStyle(color: Colors.white)),
-              onPressed: () => _showSettingsPanel(),
-            ),
           ],
         ),
-        body: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-          child: BabyList(),
+        body: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+              child: BabyList(),
+            ),
+            Positioned(
+              bottom: 20.0,
+              right: 20.0,
+              child: FloatingActionButton(
+                backgroundColor: Colors.deepOrange,
+                onPressed: () => _showSettingsPanel(),
+                child: Icon(Icons.add, color: Colors.white),
+              ),
+            ),
+          ],
         ),
       ),
     );
