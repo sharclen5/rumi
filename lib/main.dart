@@ -6,10 +6,10 @@ import 'package:rumi/services/auth.dart';
 import 'firebase_options.dart';
 import 'package:rumi/models/user.dart';
 
-void main() async{
-
-   WidgetsFlutterBinding.ensureInitialized(); // ✅ required before Firebase.initializeApp
-  await Firebase.initializeApp(            // ✅ initialize Firebase first
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // ✅ required before Firebase.initializeApp
+  await Firebase.initializeApp(
+    // ✅ initialize Firebase first
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
@@ -24,10 +24,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamProvider<User?>.value(
       value: AuthService().user,
-        initialData: null,
-      child: MaterialApp(
-        home: Wrapper(),
-        ),
+      initialData: null,
+      child: MaterialApp(home: Wrapper()),
     );
   }
 }

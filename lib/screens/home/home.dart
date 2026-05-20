@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rumi/models/baby.dart';
-import 'package:rumi/screens/home/add_baby_forms.dart';
+import 'package:rumi/screens/home/baby/add_baby_forms.dart';
 import 'package:rumi/services/auth.dart';
 import 'package:rumi/services/database.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rumi/screens/home/baby_list.dart';
+import 'package:rumi/screens/home/baby/baby_list.dart';
 import 'package:rumi/models/user.dart';
+import 'package:rumi/shared/bottomnavbar.dart';
 
 // $env:CHROME_EXECUTABLE="C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
 // flutter run -d chrome
@@ -86,26 +87,16 @@ class Home extends StatelessWidget {
                 ),
               ],
             ),
-            body: Stack(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20.0,
-                    horizontal: 50.0,
-                  ),
-                  child: BabyList(),
-                ),
-                Positioned(
-                  bottom: 20.0,
-                  right: 20.0,
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.deepOrange,
-                    onPressed: () => _showAddBabyPanel(),
-                    child: Icon(Icons.add, color: Colors.white),
-                  ),
-                ),
-              ],
+            body: Container(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+              child: BabyList(),
             ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.deepOrange,
+              onPressed: () => _showAddBabyPanel(),
+              child: Icon(Icons.add, color: Colors.white),
+            ),
+            bottomNavigationBar: BottomNavBar(currentIndex: 0),
           );
         },
       ),

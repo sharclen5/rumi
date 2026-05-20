@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rumi/models/user.dart';
-import 'package:rumi/screens/home/user_tile.dart';
+import 'package:rumi/screens/home/admin/user_tile.dart';
 
 class UserList extends StatefulWidget {
   const UserList({super.key});

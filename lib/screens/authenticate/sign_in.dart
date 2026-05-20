@@ -60,10 +60,10 @@ class _SignInState extends State<SignIn> {
                         // email
                         TextFormField(
                           controller: _emailController,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                           style: const TextStyle(
                             color: Color(0xFF393939),
-                            fontSize: 13,
+                            fontSize: 15,
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.w400,
                           ),
@@ -103,11 +103,11 @@ class _SignInState extends State<SignIn> {
                         // password
                         TextFormField(
                           controller: _passController,
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.left,
                           obscureText: true,
                           style: const TextStyle(
                             color: Color(0xFF393939),
-                            fontSize: 13,
+                            fontSize: 15,
                             fontFamily: 'Poppins',
                             fontWeight: FontWeight.w400,
                           ),

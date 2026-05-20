@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rumi/models/baby.dart';
-import 'package:rumi/screens/home/baby_tile.dart';
+import 'package:rumi/screens/home/baby/baby_tile.dart';
 
 class BabyList extends StatefulWidget {
   const BabyList({super.key});
