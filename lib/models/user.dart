@@ -4,20 +4,20 @@ class User {
   User({required this.uid});
 }
 
-class UserData {
+class UserProfile {
   final String uid;
-  final String name;
+  final String firstName;
+  final String lastName;
+  final String phone;
   final String gender;
-  final int age;
-  final double weight;
-  final double height;
+  final String email;
 
-  UserData({
+  UserProfile({
     required this.uid,
-    required this.name,
+    required this.firstName,
+    required this.lastName,
+    required this.phone,
     required this.gender,
-    required this.age,
-    required this.weight,
-    required this.height,
+    required this.email,
   });
 }

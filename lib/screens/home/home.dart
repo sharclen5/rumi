@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rumi/models/baby.dart';
-import 'package:rumi/screens/home/settings_forms.dart';
+import 'package:rumi/screens/home/add_baby_forms.dart';
 import 'package:rumi/services/auth.dart';
 import 'package:rumi/services/database.dart';
 import 'package:provider/provider.dart';
@@ -24,54 +24,90 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
 
-    void _showSettingsPanel() {
+    void _showAddBabyPanel() {
       showModalBottomSheet(
         context: context,
         builder: (context) {
           return Container(
             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-            child: SettingsForm(),
+            child: AddBabyForms(),
           );
         },
       );
     }
 
     return StreamProvider<List<Baby>>.value(
-      value: DatabaseService(uid: user!.uid).babies, // use actual uid
+      value: DatabaseService(uid: user!.uid).babies,
       initialData: [],
-      child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 113, 222, 255),
-        appBar: AppBar(
-          title: Text('Rumi', style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.deepOrange,
-          elevation: 0.0,
-          actions: <Widget>[
-            TextButton.icon(
-              icon: Icon(Icons.person, color: Colors.white),
-              label: Text('Logout', style: TextStyle(color: Colors.white)),
-              onPressed: () async {
-                await _auth.signOut();
-              },
-            ),
-          ],
-        ),
-        body: Stack(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-              child: BabyList(),
-            ),
-            Positioned(
-              bottom: 20.0,
-              right: 20.0,
-              child: FloatingActionButton(
-                backgroundColor: Colors.deepOrange,
-                onPressed: () => _showSettingsPanel(),
-                child: Icon(Icons.add, color: Colors.white),
+      child: StreamBuilder<UserProfile?>(
+        stream: DatabaseService(uid: user.uid).userProfile,
+        builder: (context, snapshot) {
+          // get first name only, fallback to empty string while loading
+          final firstName = snapshot.data?.firstName ?? '';
+          return Scaffold(
+            backgroundColor: const Color.fromARGB(255, 113, 222, 255),
+            appBar: AppBar(
+              toolbarHeight: 120,
+              backgroundColor: Colors.deepOrange,
+              elevation: 0.0,
+              flexibleSpace: SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Selamat datang,',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      Text(
+                        firstName,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
+              actions: <Widget>[
+                TextButton.icon(
+                  icon: Icon(Icons.person, color: Colors.white),
+                  label: Text('Logout', style: TextStyle(color: Colors.white)),
+                  onPressed: () async {
+                    await _auth.signOut();
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+            body: Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 20.0,
+                    horizontal: 50.0,
+                  ),
+                  child: BabyList(),
+                ),
+                Positioned(
+                  bottom: 20.0,
+                  right: 20.0,
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.deepOrange,
+                    onPressed: () => _showAddBabyPanel(),
+                    child: Icon(Icons.add, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

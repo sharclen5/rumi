@@ -1,9 +1,51 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rumi/models/baby.dart';
+import 'package:rumi/models/user.dart';
 
 class DatabaseService {
   final String uid;
   DatabaseService({required this.uid});
+
+  // reference to user's profile document
+  DocumentReference get userDocument =>
+      FirebaseFirestore.instance.collection('users').doc(uid);
+
+  // save or update user profile
+  Future updateUserProfile(
+    String firstName,
+    String lastName,
+    String phone,
+    String gender,
+    String email,
+  ) async {
+    return await userDocument.set({
+      'uid': uid,
+      'firstName': firstName,
+      'lastName': lastName,
+      'phone': phone,
+      'gender': gender,
+      'email': email,
+    });
+  }
+
+  // convert snapshot to UserProfile object
+  UserProfile? _userProfileFromSnapshot(DocumentSnapshot snapshot) {
+    if (!snapshot.exists) return null;
+    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+    return UserProfile(
+      uid: uid,
+      firstName: data['firstName'] ?? '',
+      lastName: data['lastName'] ?? '',
+      phone: data['phone'] ?? '',
+      gender: data['gender'] ?? '',
+      email: data['email'] ?? '',
+    );
+  }
+
+  // get user profile as a stream (auto-updates if data changes)
+  Stream<UserProfile?> get userProfile {
+    return userDocument.snapshots().map(_userProfileFromSnapshot);
+  }
 
   // reference to user's baby subcollection
   CollectionReference get babyCollection => FirebaseFirestore.instance

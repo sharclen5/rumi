@@ -49,6 +49,10 @@ class AuthService {
   // Register with email and password
   Future<User?> registerWithEmailAndPassword(
     String email,
+    String firstName,
+    String lastName,
+    String phone,
+    String gender,
     String password,
   ) async {
     try {
@@ -56,11 +60,22 @@ class AuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
       firebase_auth.User? user = result.user;
 
-      // create a new document for the user with the uid
-      // create parent document for the user
+      // existing: parent doc for baby data
       await FirebaseFirestore.instance.collection('babies').doc(user!.uid).set({
         'exists': true,
       });
+
+      // new: store user profile data
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'uid': user.uid,
+        'firstName': firstName,
+        'lastName': lastName,
+        'phone': phone,
+        'gender': gender,
+        'email': email,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
       return _userFromFirebase(user);
     } catch (e) {
       debugPrint(e.toString());
