@@ -47,7 +47,7 @@ class Home extends StatelessWidget {
           return Scaffold(
             backgroundColor: const Color.fromARGB(255, 113, 222, 255),
             appBar: AppBar(
-              toolbarHeight: 120,
+              toolbarHeight: 100,
               backgroundColor: Colors.deepOrange,
               elevation: 0.0,
               flexibleSpace: SafeArea(

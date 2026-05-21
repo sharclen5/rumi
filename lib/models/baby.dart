@@ -1,4 +1,5 @@
 class Baby {
+  final String id;
   final String name;
   final int age;
   final String gender;
@@ -6,6 +7,7 @@ class Baby {
   final double height;
 
   Baby({
+    required this.id,
     required this.name,
     required this.age,
     required this.gender,

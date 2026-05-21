@@ -3,7 +3,8 @@ import 'package:rumi/models/baby.dart';
 
 class BabyTile extends StatelessWidget {
   final Baby baby;
-  BabyTile({required this.baby});
+  final VoidCallback onDelete;
+  BabyTile({required this.baby, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +23,44 @@ class BabyTile extends StatelessWidget {
           ),
           title: Text(baby.name),
           subtitle: Text('Age: ${baby.age} months'),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Weight: ${baby.weight} kg'),
-              Text('Height: ${baby.height} cm'),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('Weight: ${baby.weight} kg'),
+                  Text('Height: ${baby.height} cm'),
+                ],
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Hapus Data Bayi'),
+                      content: Text('Hapus ${baby.name}?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Batal'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text(
+                            'Hapus',
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirm == true) onDelete();
+                },
+              ),
             ],
           ),
         ),

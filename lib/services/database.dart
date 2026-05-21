@@ -88,11 +88,17 @@ class DatabaseService {
     });
   }
 
+  // delete a baby
+  Future deleteBaby(String babyId) async {
+    return await babyCollection.doc(babyId).delete();
+  }
+
   // baby list from snapshot
   List<Baby> _babyListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       return Baby(
+        id: doc.id,
         name: data['name'] ?? '',
         gender: data['gender'] ?? '',
         age: data['age'] ?? 0,

@@ -43,7 +43,7 @@ class _RegisterState extends State<Register> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 15, top: 15),
+                    padding: const EdgeInsets.only(left: 1, top: 1),
                     child: Image.asset(
                       "assets/images/vector-3.png",
                       width: 413,
