@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:rumi/models/user.dart';
 import 'package:flutter/foundation.dart';
-import 'package:rumi/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {

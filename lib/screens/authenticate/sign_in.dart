@@ -33,7 +33,7 @@ class _SignInState extends State<SignIn> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 75),
+                    padding: const EdgeInsets.only(left: 75, top: 30),
                     child: Image.asset(
                       "assets/images/vector-1.png",
                       width: 413,

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rumi/shared/bottomnavbar.dart';
+import 'package:provider/provider.dart';
+import 'package:rumi/models/user.dart';
 import 'package:rumi/services/auth.dart';
+import 'package:rumi/services/database.dart';
+import 'package:rumi/shared/bottomnavbar.dart';
+import 'package:rumi/screens/home/profile/profile_detail.dart';
 
 class ProfilePage extends StatelessWidget {
   final Function(int) onTabTapped;
@@ -9,59 +13,83 @@ class ProfilePage extends StatelessWidget {
   final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 113, 222, 255),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            const Text(
-              "Profile",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+    final user = Provider.of<User?>(context);
+
+    return StreamBuilder<UserProfile?>(
+      stream: user != null ? DatabaseService(uid: user.uid).userProfile : null,
+      builder: (context, snapshot) {
+        final userProfile = snapshot.data;
+
+        return Scaffold(
+          backgroundColor: const Color.fromARGB(255, 113, 222, 255),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                const Text(
+                  "Profile",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const ProfilePic(),
+                const SizedBox(height: 20),
+                ProfileMenu(
+                  text: "My Account",
+                  icon: Icon(Icons.person, color: Color(0xFFFF7643), size: 22),
+                  press: userProfile == null
+                      ? null // disable button while loading
+                      : () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProfileDetail(user: userProfile),
+                          ),
+                        ),
+                ),
+                ProfileMenu(
+                  text: "Notifications",
+                  icon: Icon(
+                    Icons.notifications,
+                    color: Color(0xFFFF7643),
+                    size: 22,
+                  ),
+                  press: () {},
+                ),
+                ProfileMenu(
+                  text: "Settings",
+                  icon: Icon(
+                    Icons.settings,
+                    color: Color(0xFFFF7643),
+                    size: 22,
+                  ),
+                  press: () {},
+                ),
+                ProfileMenu(
+                  text: "Help Center",
+                  icon: Icon(Icons.help, color: Color(0xFFFF7643), size: 22),
+                  press: () {},
+                ),
+                ProfileMenu(
+                  text: "Log Out",
+                  icon: Icon(Icons.logout, color: Color(0xFFFF7643), size: 22),
+                  press: () async {
+                    await _auth.signOut();
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            const ProfilePic(),
-            const SizedBox(height: 20),
-            ProfileMenu(
-              text: "My Account",
-              icon: Icon(Icons.person, color: Color(0xFFFF7643), size: 22),
-              press: () => {},
-            ),
-            ProfileMenu(
-              text: "Notifications",
-              icon: Icon(
-                Icons.notifications,
-                color: Color(0xFFFF7643),
-                size: 22,
-              ),
-              press: () {},
-            ),
-            ProfileMenu(
-              text: "Settings",
-              icon: Icon(Icons.settings, color: Color(0xFFFF7643), size: 22),
-              press: () {},
-            ),
-            ProfileMenu(
-              text: "Help Center",
-              icon: Icon(Icons.help, color: Color(0xFFFF7643), size: 22),
-              press: () {},
-            ),
-            ProfileMenu(
-              text: "Log Out",
-              icon: Icon(Icons.logout, color: Color(0xFFFF7643), size: 22),
-              press: () async {
-                await _auth.signOut();
-              },
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavBar(currentIndex: 3, onTap: onTabTapped),
+          ),
+          bottomNavigationBar: BottomNavBar(
+            currentIndex: 3,
+            onTap: onTabTapped,
+          ),
+        );
+      },
     );
   }
 }

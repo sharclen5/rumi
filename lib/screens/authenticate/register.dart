@@ -67,7 +67,7 @@ class _RegisterState extends State<Register> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const SizedBox(height: 50),
+                          const SizedBox(height: 25),
                           // email
                           TextFormField(
                             controller: _emailController,

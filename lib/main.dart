@@ -6,8 +6,15 @@ import 'package:rumi/services/auth.dart';
 import 'firebase_options.dart';
 import 'package:rumi/models/user.dart';
 
+// $env:CHROME_EXECUTABLE="C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
+// flutter run -d chrome
+// pake ini buat jalanin di brave
+
+// powertoys buat bikin tab brave stay on top
+// win + ctrl + t
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // ✅ required before Firebase.initializeApp
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     // ✅ initialize Firebase first
     options: DefaultFirebaseOptions.currentPlatform,
