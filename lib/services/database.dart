@@ -25,7 +25,14 @@ class DatabaseService {
       'phone': phone,
       'gender': gender,
       'email': email,
-    });
+    }, SetOptions(merge: true));
+  }
+
+  // update user profile photo
+  Future updateProfilePicture(String base64Image) async {
+    return await userDocument.set({
+      'photoUrl': base64Image,
+    }, SetOptions(merge: true));
   }
 
   // convert snapshot to UserProfile object
@@ -39,6 +46,7 @@ class DatabaseService {
       phone: data['phone'] ?? '',
       gender: data['gender'] ?? '',
       email: data['email'] ?? '',
+      photoUrl: data['photoUrl'],
     );
   }
 
@@ -55,16 +63,20 @@ class DatabaseService {
 
   // add a new baby
   Future addBaby(
-    String name,
+    String firstName,
+    String? middleName,
+    String lastName,
     String gender,
-    int age,
+    DateTime dateOfBirth,
     double weight,
     double height,
   ) async {
     return await babyCollection.add({
-      'name': name,
+      'firstName': firstName,
+      if (middleName != null && middleName.isNotEmpty) 'middleName': middleName,
+      'lastName': lastName,
       'gender': gender,
-      'age': age,
+      'dateOfBirth': Timestamp.fromDate(dateOfBirth),
       'weight': weight,
       'height': height,
     });
@@ -73,16 +85,20 @@ class DatabaseService {
   // update existing baby
   Future updateBaby(
     String babyId,
-    String name,
+    String firstName,
+    String? middleName,
+    String lastName,
     String gender,
-    int age,
+    DateTime dateOfBirth,
     double weight,
     double height,
   ) async {
     return await babyCollection.doc(babyId).set({
-      'name': name,
+      'firstName': firstName,
+      if (middleName != null && middleName.isNotEmpty) 'middleName': middleName,
+      'lastName': lastName,
       'gender': gender,
-      'age': age,
+      'dateOfBirth': Timestamp.fromDate(dateOfBirth),
       'weight': weight,
       'height': height,
     });
@@ -99,9 +115,11 @@ class DatabaseService {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       return Baby(
         id: doc.id,
-        name: data['name'] ?? '',
+        firstName: data['firstName'] ?? '',
+        middleName: data['middleName'] ?? '',
+        lastName: data['lastName'] ?? '',
         gender: data['gender'] ?? '',
-        age: data['age'] ?? 0,
+        dateOfBirth: (data['dateOfBirth'] as Timestamp).toDate(),
         weight: (data['weight'] as num).toDouble(),
         height: (data['height'] as num).toDouble(),
       );

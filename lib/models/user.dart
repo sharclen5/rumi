@@ -11,6 +11,7 @@ class UserProfile {
   final String phone;
   final String gender;
   final String email;
+  final String? photoUrl;
 
   UserProfile({
     required this.uid,
@@ -19,5 +20,6 @@ class UserProfile {
     required this.phone,
     required this.gender,
     required this.email,
+    this.photoUrl,
   });
 }

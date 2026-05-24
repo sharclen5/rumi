@@ -16,122 +16,151 @@ class UpdateBabyForms extends StatefulWidget {
 
 class _UpdateBabyFormsState extends State<UpdateBabyForms> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> genders = ['Male', 'Female', 'Attack Helicopter'];
+  final List<String> genders = ['Male', 'Female'];
 
-  // form values
-  String? _currentName;
-  int? _currentAge;
+  late final TextEditingController _firstNameController;
+  late final TextEditingController _middleNameController;
+  late final TextEditingController _lastNameController;
+  late final TextEditingController _weightController;
+  late final TextEditingController _heightController;
+
   String _currentGender = 'Male';
-  double? _currentWeight;
-  double? _currentHeight;
+  DateTime? _currentDOB;
 
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _currentName = widget.baby.name;
+    _firstNameController = TextEditingController(text: widget.baby.firstName);
+    _middleNameController = TextEditingController(text: widget.baby.middleName ?? '');
+    _lastNameController = TextEditingController(text: widget.baby.lastName);
+    _weightController = TextEditingController(text: widget.baby.weight.toString());
+    _heightController = TextEditingController(text: widget.baby.height.toString());
     _currentGender = widget.baby.gender;
-    _currentAge = widget.baby.age;
-    _currentWeight = widget.baby.weight;
-    _currentHeight = widget.baby.height;
+    _currentDOB = widget.baby.dateOfBirth;
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _middleNameController.dispose();
+    _lastNameController.dispose();
+    _weightController.dispose();
+    _heightController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
 
-    return _isLoading
-        ? Loading()
-        : SingleChildScrollView(
+    return Stack(
+      children: [
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.75,
+          child: SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
                 children: <Widget>[
                   Text('Update Baby', style: TextStyle(fontSize: 18.0)),
                   SizedBox(height: 20.0),
-                  // name
+
+                  // first name
                   TextFormField(
-                    initialValue: _currentName,
-                    decoration: textInputDecoration.copyWith(hintText: 'Name'),
-                    validator: (val) =>
-                        val!.isEmpty ? 'Please enter a name' : null,
-                    onChanged: (val) => setState(() => _currentName = val),
+                    controller: _firstNameController,
+                    decoration: textInputDecoration.copyWith(hintText: 'First Name'),
+                    validator: (val) => val!.isEmpty ? 'Please enter a first name' : null,
                   ),
                   SizedBox(height: 20.0),
 
-                  // dropdown gender
+                  // middle name
+                  TextFormField(
+                    controller: _middleNameController,
+                    decoration: textInputDecoration.copyWith(hintText: 'Middle Name (Optional)'),
+                  ),
+                  SizedBox(height: 20.0),
+
+                  // last name
+                  TextFormField(
+                    controller: _lastNameController,
+                    decoration: textInputDecoration.copyWith(hintText: 'Last Name'),
+                    validator: (val) => val!.isEmpty ? 'Please enter a last name' : null,
+                  ),
+                  SizedBox(height: 20.0),
+
+                  // gender
                   DropdownButtonFormField(
                     value: _currentGender,
                     items: genders.map((gender) {
-                      return DropdownMenuItem(
-                        value: gender,
-                        child: Text('$gender'),
-                      );
+                      return DropdownMenuItem(value: gender, child: Text(gender));
                     }).toList(),
                     onChanged: (val) => setState(() => _currentGender = val!),
                   ),
-
                   SizedBox(height: 20.0),
-                  // age
-                  TextFormField(
-                    initialValue: _currentAge?.toString(),
-                    decoration: textInputDecoration.copyWith(
-                      hintText: 'Age (months)',
+
+                  // date of birth
+                  GestureDetector(
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: _currentDOB ?? DateTime.now(),
+                        firstDate: DateTime(DateTime.now().year - 5),
+                        lastDate: DateTime.now(),
+                      );
+                      if (picked != null) setState(() => _currentDOB = picked);
+                    },
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        decoration: textInputDecoration.copyWith(
+                          hintText: _currentDOB == null
+                              ? 'Date of Birth'
+                              : '${_currentDOB!.day}/${_currentDOB!.month}/${_currentDOB!.year}',
+                        ),
+                        validator: (_) => _currentDOB == null ? 'Please select a date of birth' : null,
+                      ),
                     ),
-                    validator: (val) =>
-                        val!.isEmpty ? 'Please enter an age' : null,
-                    onChanged: (val) =>
-                        setState(() => _currentAge = int.parse(val)),
                   ),
-
                   SizedBox(height: 20.0),
+
                   // weight
                   TextFormField(
-                    initialValue: _currentWeight?.toString(),
-                    decoration: textInputDecoration.copyWith(
-                      hintText: 'Weight (kg)',
-                    ),
-                    validator: (val) =>
-                        val!.isEmpty ? 'Please enter a weight' : null,
-                    onChanged: (val) =>
-                        setState(() => _currentWeight = double.parse(val)),
+                    controller: _weightController,
+                    decoration: textInputDecoration.copyWith(hintText: 'Weight (kg)'),
+                    keyboardType: TextInputType.number,
+                    validator: (val) => val!.isEmpty ? 'Please enter a weight' : null,
                   ),
-
                   SizedBox(height: 20.0),
+
                   // height
                   TextFormField(
-                    initialValue: _currentHeight?.toString(),
-                    decoration: textInputDecoration.copyWith(
-                      hintText: 'Height (cm)',
-                    ),
-                    validator: (val) =>
-                        val!.isEmpty ? 'Please enter a height' : null,
-                    onChanged: (val) =>
-                        setState(() => _currentHeight = double.parse(val)),
+                    controller: _heightController,
+                    decoration: textInputDecoration.copyWith(hintText: 'Height (cm)'),
+                    keyboardType: TextInputType.number,
+                    validator: (val) => val!.isEmpty ? 'Please enter a height' : null,
                   ),
-
                   SizedBox(height: 20.0),
-                  // add button
+
+                  // submit
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepOrange,
                       foregroundColor: Colors.white,
                     ),
-                    child: Text(
-                      'Update Data',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    child: Text('Update Data', style: TextStyle(color: Colors.white)),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         setState(() => _isLoading = true);
                         await DatabaseService(uid: user!.uid).updateBaby(
                           widget.baby.id,
-                          _currentName!,
+                          _firstNameController.text,
+                          _middleNameController.text.trim().isEmpty ? null : _middleNameController.text.trim(),
+                          _lastNameController.text,
                           _currentGender,
-                          _currentAge!,
-                          _currentWeight!,
-                          _currentHeight!,
+                          _currentDOB!,
+                          double.parse(_weightController.text),
+                          double.parse(_heightController.text),
                         );
                         Navigator.pop(context);
                       }
@@ -140,6 +169,16 @@ class _UpdateBabyFormsState extends State<UpdateBabyForms> {
                 ],
               ),
             ),
-          );
+          ),
+        ),
+        if (_isLoading)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withValues(alpha: 0.5),
+              child: Center(child: Loading()),
+            ),
+          ),
+      ],
+    );
   }
 }

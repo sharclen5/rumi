@@ -23,7 +23,9 @@ class BabyTile extends StatelessWidget {
                     ? Colors.blue
                     : Colors.pinkAccent,
                 child: Text(
-                  baby.name.isNotEmpty ? baby.name[0].toUpperCase() : '?',
+                  baby.firstName.isNotEmpty
+                      ? baby.firstName[0].toUpperCase()
+                      : '?',
                   style: TextStyle(color: Colors.white, fontSize: 20.0),
                 ),
               ),
@@ -33,10 +35,10 @@ class BabyTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      baby.name,
+                      '${baby.firstName}${baby.middleName != null ? ' ${baby.middleName}' : ''} ${baby.lastName}',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text('Age: ${baby.age} months'),
+                    Text('Age: ${baby.ageInMonths} months'),
                     Text('Weight: ${baby.weight} kg'),
                     Text('Height: ${baby.height} cm'),
                   ],
@@ -47,12 +49,20 @@ class BabyTile extends StatelessWidget {
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
-                    builder: (context) => Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20.0,
-                        horizontal: 60.0,
+                    isScrollControlled: true, // bikin form jadi lebih tinggi
+                    builder: (context) => Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context)
+                            .viewInsets
+                            .bottom, // biar form naik pas keyboard muncul
                       ),
-                      child: UpdateBabyForms(baby: baby),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 20.0,
+                          horizontal: 60.0,
+                        ),
+                        child: UpdateBabyForms(baby: baby),
+                      ),
                     ),
                   );
                 },
@@ -64,7 +74,7 @@ class BabyTile extends StatelessWidget {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: const Text('Hapus Data Bayi'),
-                      content: Text('Hapus ${baby.name}?'),
+                      content: Text('Hapus ${baby.firstName}?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),

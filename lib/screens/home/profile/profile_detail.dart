@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rumi/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:rumi/services/database.dart';
@@ -19,6 +23,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
   late final TextEditingController _emailController;
   late final TextEditingController _phoneController;
   String? _selectedGender;
+  File? _imageFile;
   bool _isLoading = false;
 
   @override
@@ -40,9 +45,59 @@ class _ProfileDetailState extends State<ProfileDetail> {
     super.dispose();
   }
 
+  Future<void> _pickImage(ImageSource source) async {
+    final picked = await ImagePicker().pickImage(
+      source: source,
+      imageQuality: 70,
+    );
+    if (picked != null) setState(() => _imageFile = File(picked.path));
+  }
+
+  void _showImageSourcePicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Camera'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _saveUpdate(String uid) async {
     setState(() => _isLoading = true);
     try {
+      if (_imageFile != null) {
+        final compressed = await FlutterImageCompress.compressWithFile(
+          _imageFile!.path,
+          minWidth: 200,
+          minHeight: 200,
+          quality: 50,
+        );
+        if (compressed != null) {
+          final base64Image =
+              'data:image/jpg;base64,${base64Encode(compressed)}';
+          await DatabaseService(uid: uid).updateProfilePicture(base64Image);
+        }
+      }
       await DatabaseService(uid: uid).updateUserProfile(
         _firstNameController.text.trim(),
         _lastNameController.text.trim(),
@@ -52,7 +107,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile Updated Successfully')),
+          const SnackBar(content: Text('Profile Updated Successfully!')),
         );
         Navigator.pop(context);
       }
@@ -64,7 +119,6 @@ class _ProfileDetailState extends State<ProfileDetail> {
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
-      {}
     }
   }
 
@@ -101,8 +155,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
         child: Column(
           children: [
             ProfileDetailPic(
-              image: 'assets/images/placeholder.jpg',
-              imageUploadBtnPress: () {},
+              imageFile: _imageFile,
+              photoUrl: widget.user.photoUrl,
+              imageUploadBtnPress: _showImageSourcePicker,
             ),
             const Divider(),
             Form(
@@ -206,15 +261,26 @@ class _ProfileDetailState extends State<ProfileDetail> {
 class ProfileDetailPic extends StatelessWidget {
   const ProfileDetailPic({
     super.key,
-    required this.image,
     this.imageUploadBtnPress,
+    this.imageFile,
+    this.photoUrl,
   });
 
-  final String image;
+  final File? imageFile;
+  final String? photoUrl;
   final VoidCallback? imageUploadBtnPress;
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider _resolveImage() {
+      if (imageFile != null) return FileImage(imageFile!);
+      if (photoUrl != null && photoUrl!.startsWith('data:image')) {
+        return MemoryImage(base64Decode(photoUrl!.split(',').last));
+      }
+      if (photoUrl != null) return NetworkImage(photoUrl!);
+      return const AssetImage('assets/images/placeholder.jpg');
+    }
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       margin: const EdgeInsets.symmetric(vertical: 16.0),
@@ -225,7 +291,7 @@ class ProfileDetailPic extends StatelessWidget {
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
-          CircleAvatar(radius: 50, backgroundImage: AssetImage(image)),
+          CircleAvatar(radius: 50, backgroundImage: _resolveImage()),
           InkWell(
             onTap: imageUploadBtnPress,
             child: const CircleAvatar(

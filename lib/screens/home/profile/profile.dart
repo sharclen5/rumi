@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const ProfilePic(),
+                ProfilePic(photoUrl: userProfile?.photoUrl),
                 const SizedBox(height: 20),
                 ProfileMenu(
                   text: "My Account",
@@ -87,6 +88,7 @@ class ProfilePage extends StatelessWidget {
           bottomNavigationBar: BottomNavBar(
             currentIndex: 3,
             onTap: onTabTapped,
+            photoUrl: userProfile?.photoUrl,
           ),
         );
       },
@@ -95,7 +97,16 @@ class ProfilePage extends StatelessWidget {
 }
 
 class ProfilePic extends StatelessWidget {
-  const ProfilePic({Key? key}) : super(key: key);
+  final String? photoUrl;
+  const ProfilePic({Key? key, this.photoUrl}) : super(key: key);
+
+  ImageProvider _resolveImage() {
+    if (photoUrl != null && photoUrl!.startsWith('data:image')) {
+      return MemoryImage(base64Decode(photoUrl!.split(',').last));
+    }
+    if (photoUrl != null) return NetworkImage(photoUrl!);
+    return const AssetImage('assets/images/placeholder.jpg');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,31 +116,7 @@ class ProfilePic extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         clipBehavior: Clip.none,
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage("assets/images/placeholder.jpg"),
-          ),
-          Positioned(
-            right: -16,
-            bottom: 0,
-            child: SizedBox(
-              height: 46,
-              width: 46,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                    side: const BorderSide(color: Colors.white),
-                  ),
-                  backgroundColor: const Color(0xFFF5F6F9),
-                ),
-                onPressed: () {},
-                child: SvgPicture.string(cameraIcon),
-              ),
-            ),
-          ),
-        ],
+        children: [CircleAvatar(backgroundImage: _resolveImage())],
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:rumi/screens/home/baby/baby_list.dart';
 import 'package:rumi/models/user.dart';
 import 'package:rumi/shared/bottomnavbar.dart';
+import 'dart:convert';
 
 // $env:CHROME_EXECUTABLE="C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
 // flutter run -d chrome
@@ -25,10 +26,18 @@ class Home extends StatelessWidget {
     void _showAddBabyPanel() {
       showModalBottomSheet(
         context: context,
+        isScrollControlled: true, // bikin form jadi lebih tinggi
         builder: (context) {
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-            child: AddBabyForms(),
+          return Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(
+                context,
+              ).viewInsets.bottom, // biar form naik pas keyboard muncul
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+              child: AddBabyForms(),
+            ),
           );
         },
       );
@@ -103,6 +112,7 @@ class Home extends StatelessWidget {
             bottomNavigationBar: BottomNavBar(
               currentIndex: 0,
               onTap: onTabTapped,
+              photoUrl: snapshot.data?.photoUrl,
             ),
           );
         },
