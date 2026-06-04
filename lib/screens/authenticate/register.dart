@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rumi/services/auth.dart';
-import 'package:rumi/shared/constants.dart';
 import 'package:rumi/shared/loading.dart';
 
 class Register extends StatefulWidget {
@@ -19,7 +18,6 @@ class _RegisterState extends State<Register> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _genderController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   bool loading = false;
 

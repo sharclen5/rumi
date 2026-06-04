@@ -7,11 +7,17 @@ import 'package:rumi/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:rumi/services/database.dart';
 import 'package:rumi/shared/loading.dart';
+import 'package:rumi/shared/bottomnavbar.dart';
 
 class ProfileDetail extends StatefulWidget {
   final UserProfile user;
+  final Function(int) onTabTapped;
 
-  const ProfileDetail({super.key, required this.user});
+  const ProfileDetail({
+    super.key,
+    required this.user,
+    required this.onTabTapped,
+  });
 
   @override
   State<ProfileDetail> createState() => _ProfileDetailState();
@@ -88,9 +94,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
       if (_imageFile != null) {
         final compressed = await FlutterImageCompress.compressWithFile(
           _imageFile!.path,
-          minWidth: 200,
-          minHeight: 200,
-          quality: 50,
+          minWidth: 600,
+          minHeight: 600,
+          quality: 90, // tambah kalau gambarnya pecah
         );
         if (compressed != null) {
           final base64Image =
@@ -146,9 +152,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
       appBar: AppBar(
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: Color.fromARGB(255, 0, 138, 218),
         foregroundColor: Colors.white,
-        title: const Text("My Account"),
+        title: const Text("Update Profile"),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -237,7 +243,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                   width: 160,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepOrange,
+                      backgroundColor: Color.fromARGB(255, 0, 138, 218),
                       foregroundColor: Colors.white,
                       minimumSize: const Size(double.infinity, 48),
                       shape: const StadiumBorder(),
@@ -253,6 +259,14 @@ class _ProfileDetailState extends State<ProfileDetail> {
             const SizedBox(height: 24.0),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: 3,
+        onTap: (index) {
+          Navigator.pop(context);
+          widget.onTabTapped(index);
+        },
+        photoUrl: widget.user.photoUrl,
       ),
     );
   }
@@ -296,7 +310,7 @@ class ProfileDetailPic extends StatelessWidget {
             onTap: imageUploadBtnPress,
             child: const CircleAvatar(
               radius: 13,
-              backgroundColor: Colors.deepOrange,
+              backgroundColor: Color.fromARGB(255, 0, 138, 218),
               child: Icon(Icons.add, color: Colors.white, size: 20),
             ),
           ),

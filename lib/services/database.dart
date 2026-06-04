@@ -79,7 +79,24 @@ class DatabaseService {
       'dateOfBirth': Timestamp.fromDate(dateOfBirth),
       'weight': weight,
       'height': height,
+      'isActive': false,
     });
+  }
+
+  Future setActiveBaby(String babyId) async {
+    final batch = FirebaseFirestore.instance
+        .batch(); // uses a batch write to atomically set all babies to false, then the selected one to true
+
+    // set jadi inactive semua
+    final allBabies = await babyCollection.get();
+    for (final doc in allBabies.docs) {
+      batch.update(doc.reference, {'isActive': false});
+    }
+
+    // set selected jadi active
+    batch.update(babyCollection.doc(babyId), {'isActive': true});
+
+    return await batch.commit();
   }
 
   // update existing baby
@@ -122,6 +139,7 @@ class DatabaseService {
         dateOfBirth: (data['dateOfBirth'] as Timestamp).toDate(),
         weight: (data['weight'] as num).toDouble(),
         height: (data['height'] as num).toDouble(),
+        isActive: data['isActive'] ?? false,
       );
     }).toList();
   }

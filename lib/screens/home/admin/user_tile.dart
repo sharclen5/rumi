@@ -14,7 +14,7 @@ class UserTile extends StatelessWidget {
         child: ListTile(
           leading: CircleAvatar(
             radius: 25.0,
-            backgroundColor: Colors.deepOrange,
+            backgroundColor: Color.fromARGB(255, 0, 138, 218),
             child: Text(
               user.firstName.isNotEmpty ? user.firstName[0].toUpperCase() : '?',
               style: TextStyle(color: Colors.white, fontSize: 20.0),

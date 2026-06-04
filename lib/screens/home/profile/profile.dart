@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rumi/models/user.dart';
+import 'package:rumi/screens/home/baby/baby_page.dart';
 import 'package:rumi/services/auth.dart';
 import 'package:rumi/services/database.dart';
 import 'package:rumi/shared/bottomnavbar.dart';
@@ -23,61 +24,81 @@ class ProfilePage extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: const Color.fromARGB(255, 113, 222, 255),
+          appBar: AppBar(
+            centerTitle: false,
+            elevation: 0,
+            backgroundColor: Color.fromARGB(255, 0, 138, 218),
+            foregroundColor: Colors.white,
+            title: const Text("My Account"),
+          ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: 20),
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                const Text(
-                  "Profile",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
                 ProfilePic(photoUrl: userProfile?.photoUrl),
                 const SizedBox(height: 20),
                 ProfileMenu(
-                  text: "My Account",
-                  icon: Icon(Icons.person, color: Color(0xFFFF7643), size: 22),
+                  text: "Profile Detail",
+                  icon: Icon(
+                    Icons.person,
+                    color: Color.fromARGB(255, 0, 138, 218),
+                    size: 22,
+                  ),
+                  press: userProfile == null
+                      ? null // disable button while loading
+                      : () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfileDetail(
+                              user: userProfile,
+                              onTabTapped: onTabTapped,
+                            ),
+                          ),
+                        ),
+                ),
+                ProfileMenu(
+                  text: "Data Bayi",
+                  icon: Icon(
+                    Icons.child_care,
+                    color: Color.fromARGB(255, 0, 138, 218),
+                    size: 22,
+                  ),
                   press: userProfile == null
                       ? null // disable button while loading
                       : () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                ProfileDetail(user: userProfile),
+                                BabyPage(onTabTapped: onTabTapped),
                           ),
                         ),
-                ),
-                ProfileMenu(
-                  text: "Notifications",
-                  icon: Icon(
-                    Icons.notifications,
-                    color: Color(0xFFFF7643),
-                    size: 22,
-                  ),
-                  press: () {},
                 ),
                 ProfileMenu(
                   text: "Settings",
                   icon: Icon(
                     Icons.settings,
-                    color: Color(0xFFFF7643),
+                    color: Color.fromARGB(255, 0, 138, 218),
                     size: 22,
                   ),
                   press: () {},
                 ),
                 ProfileMenu(
                   text: "Help Center",
-                  icon: Icon(Icons.help, color: Color(0xFFFF7643), size: 22),
+                  icon: Icon(
+                    Icons.help,
+                    color: Color.fromARGB(255, 0, 138, 218),
+                    size: 22,
+                  ),
                   press: () {},
                 ),
                 ProfileMenu(
                   text: "Log Out",
-                  icon: Icon(Icons.logout, color: Color(0xFFFF7643), size: 22),
+                  icon: Icon(
+                    Icons.logout,
+                    color: Color.fromARGB(255, 0, 138, 218),
+                    size: 22,
+                  ),
                   press: () async {
                     await _auth.signOut();
                   },
@@ -140,7 +161,7 @@ class ProfileMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextButton(
         style: TextButton.styleFrom(
-          foregroundColor: const Color(0xFFFF7643),
+          foregroundColor: const Color.fromARGB(255, 0, 138, 218),
           padding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
@@ -154,7 +175,7 @@ class ProfileMenu extends StatelessWidget {
               SvgPicture.asset(
                 icon,
                 colorFilter: const ColorFilter.mode(
-                  Color(0xFFFF7643),
+                  Color.fromARGB(255, 0, 138, 218),
                   BlendMode.srcIn,
                 ),
                 width: 22,

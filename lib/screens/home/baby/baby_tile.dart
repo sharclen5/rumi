@@ -20,8 +20,8 @@ class BabyTile extends StatelessWidget {
               CircleAvatar(
                 radius: 25.0,
                 backgroundColor: baby.gender.toLowerCase() == 'male'
-                    ? Colors.blue
-                    : Colors.pinkAccent,
+                    ? const Color.fromARGB(255, 140, 202, 253)
+                    : const Color.fromARGB(255, 255, 146, 182),
                 child: Text(
                   baby.firstName.isNotEmpty
                       ? baby.firstName[0].toUpperCase()
@@ -35,7 +35,7 @@ class BabyTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${baby.firstName}${baby.middleName != null ? ' ${baby.middleName}' : ''} ${baby.lastName}',
+                      '${baby.fullName}',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text('Age: ${baby.ageInMonths} months'),
@@ -68,13 +68,16 @@ class BabyTile extends StatelessWidget {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(
+                  Icons.delete,
+                  color: Color.fromARGB(255, 255, 74, 74),
+                ),
                 onPressed: () async {
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('Hapus Data Bayi'),
-                      content: Text('Hapus ${baby.firstName}?'),
+                      title: const Text('Apakah Anda Yakin?'),
+                      content: Text('Hapus Data ${baby.firstName}?'),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),

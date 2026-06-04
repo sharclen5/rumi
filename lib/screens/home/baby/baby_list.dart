@@ -37,7 +37,7 @@ class _BabyListState extends State<BabyList> {
         Align(
           alignment: Alignment.center,
           child: FloatingActionButton(
-            backgroundColor: Colors.deepOrange,
+            backgroundColor: Color.fromARGB(255, 0, 138, 218),
             onPressed: widget.onAddBaby,
             child: const Icon(Icons.add, color: Colors.white),
           ),
