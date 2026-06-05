@@ -157,7 +157,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
         title: const Text("Update Profile"),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        // padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 100),
         child: Column(
           children: [
             ProfileDetailPic(
@@ -221,7 +222,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                 ],
               ),
             ),
-            const SizedBox(height: 30.0),
+            const SizedBox(height: 50.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -260,6 +261,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
           ],
         ),
       ),
+
+      extendBody: true,
       bottomNavigationBar: BottomNavBar(
         currentIndex: 3,
         onTap: (index) {

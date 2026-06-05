@@ -178,7 +178,7 @@ class Home extends StatelessWidget {
             ),
 
             body: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+              padding: EdgeInsets.fromLTRB(16, 20, 16, 100),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -431,6 +431,8 @@ class Home extends StatelessWidget {
                 ],
               ),
             ),
+
+            extendBody: true,
             bottomNavigationBar: BottomNavBar(
               currentIndex: 0,
               onTap: onTabTapped,
