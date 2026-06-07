@@ -18,7 +18,6 @@ class Home extends StatelessWidget {
   final Function(int) onTabTapped;
   Home({super.key, required this.onTabTapped});
 
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
@@ -46,7 +45,7 @@ class Home extends StatelessWidget {
           return Scaffold(
             appBar: AppBar(
               toolbarHeight: 130,
-              backgroundColor: Color.fromARGB(255, 0, 138, 218),
+              backgroundColor: Color.fromARGB(255, 242, 218, 177),
               // Color.fromARGB(255, 0, 138, 218)
               elevation: 0.0,
               flexibleSpace: SafeArea(
@@ -62,12 +61,12 @@ class Home extends StatelessWidget {
                       // greeting
                       Text(
                         'Selamat datang,',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style: TextStyle(color: Color(0xFF363434), fontSize: 16),
                       ),
                       Text(
                         greetingTitle,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFF363434),
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -87,7 +86,7 @@ class Home extends StatelessWidget {
                                 Text(
                                   'Belum ada profil bayi yang aktif',
                                   style: TextStyle(
-                                    color: Colors.white70,
+                                    color: Color(0xFF363434),
                                     fontSize: 13,
                                   ),
                                 ),
@@ -97,24 +96,24 @@ class Home extends StatelessWidget {
                               child: DropdownButton<String>(
                                 isDense: true,
                                 value: activeBaby?.id,
-                                dropdownColor: Color.fromARGB(255, 0, 118, 185),
-                                iconEnabledColor: Colors.white,
+                                dropdownColor: Color(0xFFF5EBD9),
+                                iconEnabledColor: Color(0xFF363434),
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Color(0xFF363434),
                                   fontSize: 13,
                                 ),
                                 hint: Row(
                                   children: [
                                     Icon(
                                       Icons.circle,
-                                      color: Colors.white54,
+                                      color: Color(0xFF363434),
                                       size: 10,
                                     ),
                                     SizedBox(width: 6),
                                     Text(
                                       'Belum ada profil bayi yang aktif',
                                       style: TextStyle(
-                                        color: Colors.white70,
+                                        color: Color(0xFF363434),
                                         fontSize: 13,
                                       ),
                                     ),
@@ -132,10 +131,7 @@ class Home extends StatelessWidget {
                                         SizedBox(width: 6),
                                         Text(
                                           'Profil aktif: ${baby.fullName} · ${baby.ageInMonths} bulan',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                          ),
+                                          style: TextStyle(color: Color(0xFF363434)),
                                         ),
                                       ],
                                     );
@@ -147,7 +143,7 @@ class Home extends StatelessWidget {
                                     child: Text(
                                       '${baby.fullName} . ${baby.ageInMonths} bulan',
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: Color(0xFF363434),
                                         fontSize: 13,
                                       ),
                                     ),
@@ -173,10 +169,7 @@ class Home extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromARGB(255, 113, 222, 255),
-                    Color.fromARGB(255, 220, 235, 240),
-                  ],
+                  colors: [Color(0xFFF5EBD9), Color(0xFFFFFFFF)],
                   stops: [0.0, 1.0],
                 ),
               ),
@@ -208,8 +201,10 @@ class Home extends StatelessWidget {
 
                     // Progres Bar
                     Card(
+                      color: Color(0xFFFDF8F2),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
                       ),
                       elevation: 2,
                       child: Padding(
@@ -229,7 +224,7 @@ class Home extends StatelessWidget {
                                     strokeWidth: 7,
                                     backgroundColor: Colors.grey.shade200,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                      Color.fromARGB(255, 0, 138, 218),
+                                      Color.fromARGB(255, 144, 121, 84),
                                     ),
                                   ),
                                 ),
@@ -252,7 +247,7 @@ class Home extends StatelessWidget {
                                   'Kebutuhan Kalori Hari Ini',
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: Colors.grey.shade600,
+                                    color: Color(0xFF363434),
                                   ),
                                 ),
                                 SizedBox(width: 4),
@@ -286,8 +281,10 @@ class Home extends StatelessWidget {
 
                     //meal reccomendation
                     Card(
+                      color: Color(0xFFFDF8F2),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
                       ),
                       elevation: 2,
                       child: Padding(
@@ -309,7 +306,12 @@ class Home extends StatelessWidget {
                                         vertical: 3,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: Color.fromARGB(255, 0, 138, 218),
+                                        color: Color.fromARGB(
+                                          255,
+                                          144,
+                                          121,
+                                          84,
+                                        ),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Text(
@@ -344,10 +346,15 @@ class Home extends StatelessWidget {
                                   child: Container(
                                     width: 70,
                                     height: 70,
-                                    color: Colors.grey.shade200,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      122,
+                                      105,
+                                      95,
+                                    ),
                                     child: Icon(
                                       Icons.restaurant,
-                                      color: Colors.grey.shade400,
+                                      color: Colors.white,
                                       size: 36,
                                     ),
                                   ),
@@ -400,7 +407,7 @@ class Home extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
-          Icon(Icons.circle, size: 8, color: Color.fromARGB(255, 0, 138, 218)),
+          Icon(Icons.circle, size: 8, color: Color.fromARGB(255, 144, 121, 84)),
           SizedBox(width: 6),
           Text(name, style: TextStyle(fontSize: 13)),
           Spacer(),
@@ -424,7 +431,7 @@ class Home extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 12, color: Color.fromARGB(255, 0, 138, 218)),
+        style: TextStyle(fontSize: 12, color: Color.fromARGB(255, 0, 0, 0)),
       ),
     );
   }

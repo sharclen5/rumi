@@ -73,7 +73,7 @@ class _RecommendationViewState extends State<_RecommendationView> {
         return Scaffold(
           appBar: AppBar(
             toolbarHeight: 100,
-            backgroundColor: const Color.fromARGB(255, 0, 138, 218),
+            backgroundColor: Color.fromARGB(255, 242, 218, 177),
             elevation: 0.0,
             flexibleSpace: SafeArea(
               child: Padding(
@@ -87,7 +87,7 @@ class _RecommendationViewState extends State<_RecommendationView> {
                   children: [
                     const Text(
                       'Jadwal MPASI',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyle(color: Color(0xFF363434), fontSize: 20, fontWeight: FontWeight.bold,),
                     ),
                     const SizedBox(height: 8),
                     babies.isEmpty
@@ -112,15 +112,10 @@ class _RecommendationViewState extends State<_RecommendationView> {
                             child: DropdownButton<String>(
                               isDense: true,
                               value: activeBaby?.id,
-                              dropdownColor: const Color.fromARGB(
-                                255,
-                                0,
-                                118,
-                                185,
-                              ),
-                              iconEnabledColor: Colors.white,
-                              style: const TextStyle(
-                                color: Colors.white,
+                              dropdownColor: Color(0xFFF5EBD9),
+                              iconEnabledColor: Colors.black,
+                              style: TextStyle(
+                                color: Colors.black,
                                 fontSize: 13,
                               ),
                               hint: const Row(
@@ -153,7 +148,7 @@ class _RecommendationViewState extends State<_RecommendationView> {
                                       Text(
                                         'Profil aktif: ${baby.fullName} · ${baby.ageInMonths} bulan',
                                         style: const TextStyle(
-                                          color: Colors.white,
+                                          color: Colors.black,
                                           fontSize: 13,
                                         ),
                                       ),
@@ -167,7 +162,7 @@ class _RecommendationViewState extends State<_RecommendationView> {
                                   child: Text(
                                     '${baby.fullName} · ${baby.ageInMonths} bulan',
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 13,
                                     ),
                                   ),
@@ -195,10 +190,8 @@ class _RecommendationViewState extends State<_RecommendationView> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color.fromARGB(255, 113, 222, 255),
-                  Color.fromARGB(255, 220, 235, 240),
-                ],
+                colors: [Color(0xFFF5EBD9), Color(0xFFFFFFFF)],
+                stops: [0.0, 1.0],
               ),
             ),
             child: SafeArea(
@@ -228,7 +221,7 @@ class _RecommendationViewState extends State<_RecommendationView> {
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
-                            color: Colors.black87,
+                            color: Color(0xFF363434),
                           ),
                         ),
                         const SizedBox(height: 16),

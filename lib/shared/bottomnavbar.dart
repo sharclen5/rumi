@@ -19,7 +19,7 @@ class BottomNavBar extends StatelessWidget {
       child: Container(
         height: 64,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Color(0xFF363434),
           borderRadius: BorderRadius.circular(40),
           boxShadow: [
             BoxShadow(
@@ -45,6 +45,13 @@ class BottomNavBar extends StatelessWidget {
               index: 1,
               currentIndex: currentIndex,
               onTap: onTap,
+            ),
+            _NavItem(
+              icon: Icons.add_circle_outline,
+              label: 'Rekomendasi',
+              index: 2,
+              currentIndex: currentIndex,
+              onTap: (i) {},
             ),
             _NavItem(
               icon: Icons.history_rounded,
@@ -84,7 +91,7 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = currentIndex == index;
-    const activeColor = Color.fromARGB(255, 0, 138, 218);
+    const activeColor = Color.fromARGB(255, 242, 218, 177);
 
     return GestureDetector(
       onTap: () => onTap(index),
@@ -124,7 +131,7 @@ class _AvatarNavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = currentIndex == index;
-    const activeColor = Color.fromARGB(255, 0, 138, 218);
+    const activeColor = Color.fromARGB(255, 242, 218, 177);
 
     return GestureDetector(
       onTap: () => onTap(index),
