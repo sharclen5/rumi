@@ -33,10 +33,16 @@ class _UpdateBabyFormsState extends State<UpdateBabyForms> {
   void initState() {
     super.initState();
     _firstNameController = TextEditingController(text: widget.baby.firstName);
-    _middleNameController = TextEditingController(text: widget.baby.middleName ?? '');
+    _middleNameController = TextEditingController(
+      text: widget.baby.middleName ?? '',
+    );
     _lastNameController = TextEditingController(text: widget.baby.lastName);
-    _weightController = TextEditingController(text: widget.baby.weight.toString());
-    _heightController = TextEditingController(text: widget.baby.height.toString());
+    _weightController = TextEditingController(
+      text: widget.baby.weight.toString(),
+    );
+    _heightController = TextEditingController(
+      text: widget.baby.height.toString(),
+    );
     _currentGender = widget.baby.gender;
     _currentDOB = widget.baby.dateOfBirth;
   }
@@ -70,31 +76,46 @@ class _UpdateBabyFormsState extends State<UpdateBabyForms> {
                   // first name
                   TextFormField(
                     controller: _firstNameController,
-                    decoration: textInputDecoration.copyWith(hintText: 'First Name'),
-                    validator: (val) => val!.isEmpty ? 'Please enter a first name' : null,
+                    decoration: textInputDecoration.copyWith(
+                      labelText: 'First Name',
+                      hintText: 'First Name',
+                    ),
+                    validator: (val) =>
+                        val!.isEmpty ? 'Please enter a first name' : null,
                   ),
                   SizedBox(height: 20.0),
 
                   // middle name
                   TextFormField(
                     controller: _middleNameController,
-                    decoration: textInputDecoration.copyWith(hintText: 'Middle Name (Optional)'),
+                    decoration: textInputDecoration.copyWith(
+                      labelText: 'Middle Name (Optional)',
+                      hintText: 'Middle Name (Optional)',
+                    ),
                   ),
                   SizedBox(height: 20.0),
 
                   // last name
                   TextFormField(
                     controller: _lastNameController,
-                    decoration: textInputDecoration.copyWith(hintText: 'Last Name'),
-                    validator: (val) => val!.isEmpty ? 'Please enter a last name' : null,
+                    decoration: textInputDecoration.copyWith(
+                      labelText: 'Last Name',
+                      hintText: 'Last Name',
+                    ),
+                    validator: (val) =>
+                        val!.isEmpty ? 'Please enter a last name' : null,
                   ),
                   SizedBox(height: 20.0),
 
                   // gender
                   DropdownButtonFormField(
                     value: _currentGender,
+                    decoration: InputDecoration(labelText: 'Gender'),
                     items: genders.map((gender) {
-                      return DropdownMenuItem(value: gender, child: Text(gender));
+                      return DropdownMenuItem(
+                        value: gender,
+                        child: Text(gender),
+                      );
                     }).toList(),
                     onChanged: (val) => setState(() => _currentGender = val!),
                   ),
@@ -113,12 +134,18 @@ class _UpdateBabyFormsState extends State<UpdateBabyForms> {
                     },
                     child: AbsorbPointer(
                       child: TextFormField(
-                        decoration: textInputDecoration.copyWith(
-                          hintText: _currentDOB == null
-                              ? 'Date of Birth'
+                        controller: TextEditingController(
+                          text: _currentDOB == null
+                              ? ''
                               : '${_currentDOB!.day}/${_currentDOB!.month}/${_currentDOB!.year}',
                         ),
-                        validator: (_) => _currentDOB == null ? 'Please select a date of birth' : null,
+                        decoration: textInputDecoration.copyWith(
+                          labelText: 'Date of Birth',
+                          hintText: 'Pilih Tanggal Lahir',
+                        ),
+                        validator: (_) => _currentDOB == null
+                            ? 'Please select a date of birth'
+                            : null,
                       ),
                     ),
                   ),
@@ -127,18 +154,26 @@ class _UpdateBabyFormsState extends State<UpdateBabyForms> {
                   // weight
                   TextFormField(
                     controller: _weightController,
-                    decoration: textInputDecoration.copyWith(hintText: 'Weight (kg)'),
+                    decoration: textInputDecoration.copyWith(
+                      labelText: 'Weight (kg)',
+                      hintText: 'Weight (kg)',
+                    ),
                     keyboardType: TextInputType.number,
-                    validator: (val) => val!.isEmpty ? 'Please enter a weight' : null,
+                    validator: (val) =>
+                        val!.isEmpty ? 'Please enter a weight' : null,
                   ),
                   SizedBox(height: 20.0),
 
                   // height
                   TextFormField(
                     controller: _heightController,
-                    decoration: textInputDecoration.copyWith(hintText: 'Height (cm)'),
+                    decoration: textInputDecoration.copyWith(
+                      labelText: 'Height (cm)',
+                      hintText: 'Height (cm)',
+                    ),
                     keyboardType: TextInputType.number,
-                    validator: (val) => val!.isEmpty ? 'Please enter a height' : null,
+                    validator: (val) =>
+                        val!.isEmpty ? 'Please enter a height' : null,
                   ),
                   SizedBox(height: 20.0),
 
@@ -148,14 +183,19 @@ class _UpdateBabyFormsState extends State<UpdateBabyForms> {
                       backgroundColor: Colors.deepOrange,
                       foregroundColor: Colors.white,
                     ),
-                    child: Text('Update Data', style: TextStyle(color: Colors.white)),
+                    child: Text(
+                      'Update Data',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         setState(() => _isLoading = true);
                         await DatabaseService(uid: user!.uid).updateBaby(
                           widget.baby.id,
                           _firstNameController.text,
-                          _middleNameController.text.trim().isEmpty ? null : _middleNameController.text.trim(),
+                          _middleNameController.text.trim().isEmpty
+                              ? null
+                              : _middleNameController.text.trim(),
                           _lastNameController.text,
                           _currentGender,
                           _currentDOB!,

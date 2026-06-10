@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rumi/screens/home/recommendation/add_recommendation.dart';
 import 'dart:convert';
+import 'package:rumi/models/baby.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -48,10 +51,27 @@ class BottomNavBar extends StatelessWidget {
             ),
             _NavItem(
               icon: Icons.add_circle_outline,
-              label: 'Rekomendasi',
+              label: 'Buat Rencana',
               index: 2,
               currentIndex: currentIndex,
-              onTap: (i) {},
+              onTap: (i) {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (outerContext) => Padding(
+                    padding: EdgeInsets.only(
+                      top: 20,
+                      left: 20,
+                      right: 20,
+                      bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                    ),
+                    child: Provider<List<Baby>?>.value(
+                      value: Provider.of<List<Baby>?>(context, listen: false),
+                      child: const AddRecommendation(),
+                    ),
+                  ),
+                );
+              },
             ),
             _NavItem(
               icon: Icons.history_rounded,
@@ -145,14 +165,18 @@ class _AvatarNavItem extends StatelessWidget {
               : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
         ),
-        child: CircleAvatar(
-          radius: 14,
-          backgroundImage:
-              photoUrl != null && photoUrl!.startsWith('data:image')
-              ? MemoryImage(base64Decode(photoUrl!.split(',').last))
-              : const AssetImage('assets/images/placeholder.jpg')
-                    as ImageProvider,
-        ),
+        child: photoUrl != null
+            ? CircleAvatar(
+                radius: 14,
+                backgroundImage: photoUrl!.startsWith('data:image')
+                    ? MemoryImage(base64Decode(photoUrl!.split(',').last))
+                    : NetworkImage(photoUrl!) as ImageProvider,
+              )
+            : CircleAvatar(
+                radius: 14,
+                backgroundColor: Color(0xFFE8C99A),
+                child: Icon(Icons.person, color: Color(0xFF8B6F47), size: 16),
+              ),
       ),
     );
   }

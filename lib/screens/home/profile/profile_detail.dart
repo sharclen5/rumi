@@ -136,9 +136,17 @@ class _ProfileDetailState extends State<ProfileDetail> {
         horizontal: 24.0,
         vertical: 16.0,
       ),
-      border: const OutlineInputBorder(
-        borderSide: BorderSide.none,
-        borderRadius: BorderRadius.all(Radius.circular(50)),
+      border: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(0xFFE8C99A), width: 1.5),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(0xFFE8C99A), width: 1.5),
+        borderRadius: BorderRadius.circular(50),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(0xFFC8853A), width: 1.5),
+        borderRadius: BorderRadius.circular(50),
       ),
     );
   }
@@ -152,9 +160,11 @@ class _ProfileDetailState extends State<ProfileDetail> {
       appBar: AppBar(
         centerTitle: false,
         elevation: 0,
-        backgroundColor: Color.fromARGB(255, 0, 138, 218),
-        foregroundColor: Colors.white,
-        title: const Text("Update Profile"),
+        backgroundColor: Color.fromARGB(255, 242, 218, 177),
+        title: const Text(
+          "Update Profile",
+          style: TextStyle(color: Color(0xFF363434)),
+        ),
       ),
 
       body: Container(
@@ -162,10 +172,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 113, 222, 255), // ✏️ top color
-              Color.fromARGB(255, 220, 235, 240),
-            ],
+            colors: [Color(0xFFF5EBD9), Color(0xFFFFFFFF)],
             stops: [0.0, 1.0],
           ),
         ),
@@ -258,7 +265,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                     width: 160,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 0, 138, 218),
+                        backgroundColor: Color(0xFF363434),
                         foregroundColor: Colors.white,
                         minimumSize: const Size(double.infinity, 48),
                         shape: const StadiumBorder(),
@@ -303,14 +310,16 @@ class ProfileDetailPic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ImageProvider _resolveImage() {
+    ImageProvider? _resolveImage() {
       if (imageFile != null) return FileImage(imageFile!);
       if (photoUrl != null && photoUrl!.startsWith('data:image')) {
         return MemoryImage(base64Decode(photoUrl!.split(',').last));
       }
       if (photoUrl != null) return NetworkImage(photoUrl!);
-      return const AssetImage('assets/images/placeholder.jpg');
+      return null;
     }
+
+    final image = _resolveImage();
 
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -322,12 +331,18 @@ class ProfileDetailPic extends StatelessWidget {
       child: Stack(
         alignment: Alignment.bottomRight,
         children: [
-          CircleAvatar(radius: 50, backgroundImage: _resolveImage()),
+          image != null
+              ? CircleAvatar(radius: 50, backgroundImage: image)
+              : CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Color(0xFFE8C99A),
+                  child: Icon(Icons.person, color: Color(0xFF8B6F47), size: 40),
+                ),
           InkWell(
             onTap: imageUploadBtnPress,
             child: const CircleAvatar(
               radius: 13,
-              backgroundColor: Color.fromARGB(255, 0, 138, 218),
+              backgroundColor: Color(0xFF363434),
               child: Icon(Icons.add, color: Colors.white, size: 20),
             ),
           ),
@@ -354,7 +369,7 @@ class UserInfoEditField extends StatelessWidget {
             child: Text(
               text,
               style: const TextStyle(
-                color: Color(0xFF757575),
+                color: Color(0xFF363434),
                 fontWeight: FontWeight.w500,
               ),
             ),

@@ -72,6 +72,32 @@ class _RecommendationViewState extends State<_RecommendationView> {
       builder: (context, snapshot) {
         return Scaffold(
           appBar: AppBar(
+            // Button buat edit
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  right: 16.0,
+                  top: 12.0,
+                  bottom: 12.0,
+                ),
+                child: GestureDetector(
+                  onTap: () {},
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      color: const Color.fromARGB(255, 122, 105, 95),
+                      child: const Icon(
+                        Icons.edit_document,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
             toolbarHeight: 100,
             backgroundColor: Color.fromARGB(255, 242, 218, 177),
             elevation: 0.0,
@@ -87,7 +113,11 @@ class _RecommendationViewState extends State<_RecommendationView> {
                   children: [
                     const Text(
                       'Jadwal MPASI',
-                      style: TextStyle(color: Color(0xFF363434), fontSize: 20, fontWeight: FontWeight.bold,),
+                      style: TextStyle(
+                        color: Color(0xFF363434),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     babies.isEmpty
@@ -232,17 +262,24 @@ class _RecommendationViewState extends State<_RecommendationView> {
                   // Scrollable timeline
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                       child: Column(
                         children: List.generate(24, (hour) {
-                          final hasSlot = hour == 13 || hour == 18;
+                          final slots = {
+                            7: ('Sarapan', 'Bubur Ayam Wortel'),
+                            12: ('Makan Siang', 'Nasi Tim Ikan'),
+                            18: ('Makan Malam', 'Pure Labu Kuning'),
+                          };
+                          final hasSlot = slots.containsKey(hour);
                           final timeLabel =
                               '${hour.toString().padLeft(2, '0')}.00';
 
                           return _TimeLineRow(
                             timeLabel: timeLabel,
                             hasSlot: hasSlot,
-                            slotLabel: hour == 13 ? 'Tes 1' : 'Tes 2',
+                            badge: hasSlot ? slots[hour]!.$1 : '',
+                            mealType: hasSlot ? slots[hour]!.$1 : '',
+                            mealName: hasSlot ? slots[hour]!.$2 : '',
                           );
                         }),
                       ),
@@ -267,20 +304,24 @@ class _RecommendationViewState extends State<_RecommendationView> {
 class _TimeLineRow extends StatelessWidget {
   final String timeLabel;
   final bool hasSlot;
-  final String slotLabel;
+  final String badge;
+  final String mealType;
+  final String mealName;
 
   const _TimeLineRow({
     required this.timeLabel,
     required this.hasSlot,
-    required this.slotLabel,
+    this.badge = '',
+    this.mealType = '',
+    this.mealName = '',
   });
 
   @override
   Widget build(BuildContext context) {
-    const activeColor = Color.fromARGB(255, 0, 138, 218);
+    const activeColor = Color(0xFF363434);
 
     return SizedBox(
-      height: 64,
+      height: 90,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -288,32 +329,90 @@ class _TimeLineRow extends StatelessWidget {
           Expanded(
             child: hasSlot
                 ? GestureDetector(
-                    onTap: () {
-                      // detail page later
-                    },
                     child: Card(
+                      color: Color(0xFFFDF8F2),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
                       ),
                       elevation: 2,
-                      margin: const EdgeInsets.only(right: 8, bottom: 8),
+                      margin: const EdgeInsets.only(
+                        right: 8,
+                        bottom: 8,
+                        top: 0,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 8,
                         ),
-                        child: Text(
-                          slotLabel,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black87,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 144, 121, 84),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    badge,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  mealType,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                                Text(
+                                  mealName,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Container(
+                                width: 48,
+                                height: 48,
+                                color: const Color.fromARGB(255, 122, 105, 95),
+                                child: Icon(
+                                  Icons.lunch_dining,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   )
-                : const SizedBox(),
+                : Container(
+                    margin: const EdgeInsets.only(right: 8, top: 15),
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      height: 1,
+                      color: activeColor.withOpacity(0.2),
+                    ),
+                  ),
           ),
 
           // right: line + time label

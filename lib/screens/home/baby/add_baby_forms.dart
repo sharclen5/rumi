@@ -150,7 +150,7 @@ class _AddBabyFormsState extends State<AddBabyForms> {
                   // submit
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 0, 138, 218),
+                      backgroundColor: Color(0xFF363434),
                       foregroundColor: Colors.white,
                     ),
                     child: Text(

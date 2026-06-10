@@ -27,9 +27,12 @@ class ProfilePage extends StatelessWidget {
           appBar: AppBar(
             centerTitle: false,
             elevation: 0,
-            backgroundColor: Color.fromARGB(255, 0, 138, 218),
+            backgroundColor: Color.fromARGB(255, 242, 218, 177),
             foregroundColor: Colors.white,
-            title: const Text("My Account"),
+            title: const Text(
+              "My Account",
+              style: TextStyle(color: Color(0xFF363434)),
+            ),
           ),
 
           body: Container(
@@ -38,10 +41,7 @@ class ProfilePage extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color.fromARGB(255, 113, 222, 255), // ✏️ top color
-                  Color.fromARGB(255, 220, 235, 240),
-                ],
+                colors: [Color(0xFFF5EBD9), Color(0xFFFFFFFF)],
                 stops: [0.0, 1.0],
               ),
             ),
@@ -55,11 +55,7 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(height: 20),
                   ProfileMenu(
                     text: "Profile Detail",
-                    icon: Icon(
-                      Icons.person,
-                      color: Color.fromARGB(255, 0, 138, 218),
-                      size: 22,
-                    ),
+                    icon: Icon(Icons.person, size: 22),
                     press: userProfile == null
                         ? null // disable button while loading
                         : () => Navigator.push(
@@ -74,11 +70,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   ProfileMenu(
                     text: "Data Bayi",
-                    icon: Icon(
-                      Icons.child_care,
-                      color: Color.fromARGB(255, 0, 138, 218),
-                      size: 22,
-                    ),
+                    icon: Icon(Icons.child_care, size: 22),
                     press: userProfile == null
                         ? null // disable button while loading
                         : () => Navigator.push(
@@ -91,29 +83,17 @@ class ProfilePage extends StatelessWidget {
                   ),
                   ProfileMenu(
                     text: "Settings",
-                    icon: Icon(
-                      Icons.settings,
-                      color: Color.fromARGB(255, 0, 138, 218),
-                      size: 22,
-                    ),
+                    icon: Icon(Icons.settings, size: 22),
                     press: () {},
                   ),
                   ProfileMenu(
                     text: "Help Center",
-                    icon: Icon(
-                      Icons.help,
-                      color: Color.fromARGB(255, 0, 138, 218),
-                      size: 22,
-                    ),
+                    icon: Icon(Icons.help, size: 22),
                     press: () {},
                   ),
                   ProfileMenu(
                     text: "Log Out",
-                    icon: Icon(
-                      Icons.logout,
-                      color: Color.fromARGB(255, 0, 138, 218),
-                      size: 22,
-                    ),
+                    icon: Icon(Icons.logout, size: 22),
                     press: () async {
                       await _auth.signOut();
                     },
@@ -139,11 +119,10 @@ class ProfilePic extends StatelessWidget {
   const ProfilePic({Key? key, this.photoUrl}) : super(key: key);
 
   ImageProvider _resolveImage() {
-    if (photoUrl != null && photoUrl!.startsWith('data:image')) {
+    if (photoUrl!.startsWith('data:image')) {
       return MemoryImage(base64Decode(photoUrl!.split(',').last));
     }
-    if (photoUrl != null) return NetworkImage(photoUrl!);
-    return const AssetImage('assets/images/placeholder.jpg');
+    return NetworkImage(photoUrl!);
   }
 
   @override
@@ -154,7 +133,14 @@ class ProfilePic extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         clipBehavior: Clip.none,
-        children: [CircleAvatar(backgroundImage: _resolveImage())],
+        children: [
+          photoUrl != null
+              ? CircleAvatar(backgroundImage: _resolveImage())
+              : CircleAvatar(
+                  backgroundColor: Color(0xFFE8C99A),
+                  child: Icon(Icons.person, color: Color(0xFF8B6F47), size: 40),
+                ),
+        ],
       ),
     );
   }
@@ -178,12 +164,13 @@ class ProfileMenu extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: TextButton(
         style: TextButton.styleFrom(
-          foregroundColor: const Color.fromARGB(255, 0, 138, 218),
+          foregroundColor: const Color(0xFF363434),
           padding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
           ),
-          backgroundColor: const Color(0xFFF5F6F9),
+          backgroundColor: Color(0xFFFDF8F2),
         ),
         onPressed: press,
         child: Row(
@@ -192,7 +179,7 @@ class ProfileMenu extends StatelessWidget {
               SvgPicture.asset(
                 icon,
                 colorFilter: const ColorFilter.mode(
-                  Color.fromARGB(255, 0, 138, 218),
+                  Color(0xFF363434),
                   BlendMode.srcIn,
                 ),
                 width: 22,

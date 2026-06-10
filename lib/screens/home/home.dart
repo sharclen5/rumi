@@ -6,6 +6,7 @@ import 'package:rumi/screens/home/baby/baby_tile.dart';
 import 'package:rumi/models/user.dart';
 import 'package:rumi/shared/bottomnavbar.dart';
 import 'package:rumi/shared/calendar_strip.dart';
+import 'package:rumi/shared/meal_card.dart';
 
 // $env:CHROME_EXECUTABLE="C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
 // flutter run -d chrome
@@ -231,130 +232,8 @@ class Home extends StatelessWidget {
                     SizedBox(height: 16),
 
                     // Meal Card
-                    Card(
-                      color: Color(0xFFFDF8F2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
-                      ),
-                      elevation: 2,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // header row
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // badge
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 3,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Color.fromARGB(
-                                          255,
-                                          144,
-                                          121,
-                                          84,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Text(
-                                        'Jadwal Berikutnya',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 6),
-                                    // meal type + time
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Sarapan',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.grey.shade500,
-                                          ),
-                                        ),
-                                        Text(
-                                          ' · 07.00',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.grey.shade500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 2),
-                                    Text(
-                                      'Bubur Ayam Wortel',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // food image placeholder
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Container(
-                                    width: 70,
-                                    height: 70,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      122,
-                                      105,
-                                      95,
-                                    ),
-                                    child: Icon(
-                                      Icons.lunch_dining,
-                                      color: Colors.white,
-                                      size: 36,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 12),
-                            Divider(),
-                            SizedBox(height: 8),
+                    MealCard(),
 
-                            // macronutrient chips
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // macronutrient chips
-                                Wrap(
-                                  spacing: 8,
-                                  children: [
-                                    _macroChip('Protein 30%'),
-                                    _macroChip('Karbo 50%'),
-                                    _macroChip('Lemak 20%'),
-                                  ],
-                                ),
-                                // lihat detail
-                                Text(
-                                  'Lihat detail →',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color.fromARGB(255, 144, 121, 84),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                     SizedBox(height: 16),
 
                     // Tips Card
@@ -461,20 +340,6 @@ class Home extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _macroChip(String label) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: Color.fromARGB(255, 0, 138, 218).withOpacity(0.12),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 12, color: Color.fromARGB(255, 0, 0, 0)),
       ),
     );
   }

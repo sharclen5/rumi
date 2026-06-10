@@ -42,13 +42,14 @@ class BabyPage extends StatelessWidget {
         stream: DatabaseService(uid: user.uid).userProfile,
         builder: (context, snapshot) {
           return Scaffold(
-            backgroundColor: const Color.fromARGB(255, 113, 222, 255),
             appBar: AppBar(
               centerTitle: false,
               elevation: 0,
-              backgroundColor: Color.fromARGB(255, 0, 138, 218),
-              foregroundColor: Colors.white,
-              title: const Text("Data Bayi"),
+              backgroundColor: Color.fromARGB(255, 242, 218, 177),
+              title: const Text(
+                "Data Bayi",
+                style: TextStyle(color: Color(0xFF363434)),
+              ),
             ),
 
             body: Container(
@@ -57,10 +58,7 @@ class BabyPage extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromARGB(255, 113, 222, 255), // ✏️ top color
-                    Color.fromARGB(255, 220, 235, 240),
-                  ],
+                  colors: [Color(0xFFF5EBD9), Color(0xFFFFFFFF)],
                   stops: [0.0, 1.0],
                 ),
               ),
