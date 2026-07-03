@@ -7,6 +7,7 @@ import 'package:rumi/models/user.dart';
 import 'package:rumi/shared/bottomnavbar.dart';
 import 'package:rumi/shared/calendar_strip.dart';
 import 'package:rumi/shared/meal_card.dart';
+import 'package:rumi/shared/nutrition_card_stars.dart';
 
 // $env:CHROME_EXECUTABLE="C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
 // flutter run -d chrome
@@ -179,14 +180,14 @@ class Home extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // data bayi (temporary)
-                    if (activeBaby != null)
-                      BabyTile(
-                        baby: activeBaby,
-                        onDelete: () => DatabaseService(
-                          uid: user.uid,
-                        ).deleteBaby(activeBaby.id),
-                      ),
-                    SizedBox(height: 16),
+                    // if (activeBaby != null)
+                    //   BabyTile(
+                    //     baby: activeBaby,
+                    //     onDelete: () => DatabaseService(
+                    //       uid: user.uid,
+                    //     ).deleteBaby(activeBaby.id),
+                    //   ),
+                    // SizedBox(height: 16),
 
                     // Calendar Strip
                     CalendarStrip(
@@ -198,37 +199,8 @@ class Home extends StatelessWidget {
                     SizedBox(height: 16),
 
                     // Kelengkapan Gizi Hari Ini
-                    Card(
-                      color: Color(0xFFFDF8F2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
-                      ),
-                      elevation: 2,
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Kelengkapan Gizi Hari Ini',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF363434),
-                              ),
-                            ),
-                            SizedBox(height: 6),
-                            Divider(),
-                            SizedBox(height: 6),
-                            _nutrisiRow('Protein Hewani', 0.6),
-                            _nutrisiRow('Karbohidrat', 0.75),
-                            _nutrisiRow('Sayuran', 0.25),
-                            _nutrisiRow('Buah', 0.0),
-                          ],
-                        ),
-                      ),
-                    ),
+                    if (activeBaby != null)
+                      NutritionCardStars(uid: user.uid, babyId: activeBaby.id),
                     SizedBox(height: 16),
 
                     // Meal Card
@@ -305,42 +277,6 @@ class Home extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _nutrisiRow(String label, double value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 13, color: Color(0xFF363434)),
-              ),
-              Text(
-                '${(value * 100).toInt()}%',
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
-              ),
-            ],
-          ),
-          SizedBox(height: 4),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: value,
-              minHeight: 8,
-              backgroundColor: Colors.grey.shade200,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                Color.fromARGB(255, 144, 121, 84),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

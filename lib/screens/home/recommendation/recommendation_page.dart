@@ -51,23 +51,15 @@ class _RecommendationViewState extends State<_RecommendationView> {
 
   String _monthName(int month) {
     const months = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember',
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
     ];
     return months[month - 1];
   }
 
-  // read from Firestore instead of calling API directly
+  String get _selectedDateStr =>
+      '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
+
   Future<void> _fetchRecommendation(Baby baby) async {
     setState(() {
       _isLoading = true;
@@ -75,18 +67,56 @@ class _RecommendationViewState extends State<_RecommendationView> {
     });
 
     try {
-      final dateStr =
-          '${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}';
-
       final result = await DatabaseService(
         uid: widget.uid,
-      ).getRecommendation(baby.id, dateStr);
+      ).getRecommendation(baby.id, _selectedDateStr);
 
       setState(() => _recommendation = result);
     } catch (e) {
       setState(() => _error = e.toString());
     } finally {
       setState(() => _isLoading = false);
+    }
+  }
+
+  // CHANGED: uses mealIndex + toggleMealEaten (matches DatabaseService),
+  // and updates local state immutably via copyWith since Meal is final.
+  Future<void> _handleToggleEaten(int mealIndex, bool newValue) async {
+    if (_lastFetchedBaby == null || _recommendation == null) return;
+
+    final previousMeal = _recommendation!.meals[mealIndex];
+
+    // optimistic local update
+    setState(() {
+      _recommendation!.meals[mealIndex] = previousMeal.copyWith(
+        isEaten: newValue,
+      );
+    });
+
+    try {
+      await DatabaseService(
+        uid: widget.uid,
+      ).toggleMealEaten(_lastFetchedBaby!.id, _selectedDateStr, mealIndex);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              newValue ? 'Ditandai sudah dimakan' : 'Ditandai belum dimakan',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      // revert on failure
+      if (mounted) {
+        setState(() {
+          _recommendation!.meals[mealIndex] = previousMeal;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal memperbarui status: $e')),
+        );
+      }
     }
   }
 
@@ -99,7 +129,6 @@ class _RecommendationViewState extends State<_RecommendationView> {
       orElse: () => null,
     );
 
-    // fetch when active baby changes or on first load
     if (activeBaby != null && activeBaby.id != _lastFetchedBaby?.id) {
       _lastFetchedBaby = activeBaby;
       _fetchRecommendation(activeBaby);
@@ -121,7 +150,6 @@ class _RecommendationViewState extends State<_RecommendationView> {
       builder: (context, snapshot) {
         return Scaffold(
           appBar: AppBar(
-            // Button buat edit
             actions: [
               Padding(
                 padding: const EdgeInsets.only(
@@ -148,7 +176,7 @@ class _RecommendationViewState extends State<_RecommendationView> {
               ),
             ],
             toolbarHeight: 100,
-            backgroundColor: Color.fromARGB(255, 242, 218, 177),
+            backgroundColor: const Color.fromARGB(255, 242, 218, 177),
             elevation: 0.0,
             flexibleSpace: SafeArea(
               child: Padding(
@@ -172,18 +200,11 @@ class _RecommendationViewState extends State<_RecommendationView> {
                     babies.isEmpty
                         ? const Row(
                             children: [
-                              Icon(
-                                Icons.circle,
-                                color: Colors.white38,
-                                size: 10,
-                              ),
+                              Icon(Icons.circle, color: Colors.white38, size: 10),
                               SizedBox(width: 6),
                               Text(
                                 'Belum ada profil bayi yang aktif',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 13,
-                                ),
+                                style: TextStyle(color: Colors.white70, fontSize: 13),
                               ),
                             ],
                           )
@@ -191,26 +212,16 @@ class _RecommendationViewState extends State<_RecommendationView> {
                             child: DropdownButton<String>(
                               isDense: true,
                               value: activeBaby?.id,
-                              dropdownColor: Color(0xFFF5EBD9),
+                              dropdownColor: const Color(0xFFF5EBD9),
                               iconEnabledColor: Colors.black,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13,
-                              ),
+                              style: const TextStyle(color: Colors.black, fontSize: 13),
                               hint: const Row(
                                 children: [
-                                  Icon(
-                                    Icons.circle,
-                                    color: Colors.white54,
-                                    size: 10,
-                                  ),
+                                  Icon(Icons.circle, color: Colors.white54, size: 10),
                                   SizedBox(width: 6),
                                   Text(
                                     'Belum ada profil bayi yang aktif',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 13,
-                                    ),
+                                    style: TextStyle(color: Colors.white70, fontSize: 13),
                                   ),
                                 ],
                               ),
@@ -218,18 +229,11 @@ class _RecommendationViewState extends State<_RecommendationView> {
                                 return babies.map((baby) {
                                   return Row(
                                     children: [
-                                      const Icon(
-                                        Icons.circle,
-                                        color: Colors.greenAccent,
-                                        size: 10,
-                                      ),
+                                      const Icon(Icons.circle, color: Colors.greenAccent, size: 10),
                                       const SizedBox(width: 6),
                                       Text(
                                         'Profil aktif: ${baby.fullName} · ${baby.ageInMonths} bulan',
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 13,
-                                        ),
+                                        style: const TextStyle(color: Colors.black, fontSize: 13),
                                       ),
                                     ],
                                   );
@@ -240,18 +244,13 @@ class _RecommendationViewState extends State<_RecommendationView> {
                                   value: baby.id,
                                   child: Text(
                                     '${baby.fullName} · ${baby.ageInMonths} bulan',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 13,
-                                    ),
+                                    style: const TextStyle(color: Colors.black, fontSize: 13),
                                   ),
                                 );
                               }).toList(),
                               onChanged: (selectedId) {
                                 if (selectedId != null) {
-                                  DatabaseService(
-                                    uid: widget.uid,
-                                  ).setActiveBaby(selectedId);
+                                  DatabaseService(uid: widget.uid).setActiveBaby(selectedId);
                                 }
                               },
                             ),
@@ -277,33 +276,26 @@ class _RecommendationViewState extends State<_RecommendationView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // fixed top section
                   Padding(
-                    padding: const EdgeInsetsGeometry.fromLTRB(16, 16, 16, 0),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Calendar strip
                         CalendarStrip(
                           selectedDate: _selectedDate,
                           onDateSelected: (date) {
                             setState(() {
                               _selectedDate = date;
-                              _recommendation =
-                                  null; // clear previous recommendation
+                              _recommendation = null;
                             });
                             if (_lastFetchedBaby != null) {
-                              _fetchRecommendation(
-                                _lastFetchedBaby!,
-                              ); // fetch for new date
+                              _fetchRecommendation(_lastFetchedBaby!);
                             }
                           },
                           showCard: true,
                           showArrows: true,
                         ),
                         const SizedBox(height: 12),
-
-                        // Selected date label
                         Text(
                           '${_selectedDate.day} ${_monthName(_selectedDate.month)}, ${_dayName(_selectedDate.weekday)}',
                           style: const TextStyle(
@@ -317,26 +309,17 @@ class _RecommendationViewState extends State<_RecommendationView> {
                     ),
                   ),
 
-                  // Scrollable timeline
                   Expanded(
                     child: _isLoading
                         ? Loading()
                         : _error != null
                         ? Center(
-                            // error state
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
-                                  Icons.error_outline,
-                                  color: Colors.red,
-                                  size: 48,
-                                ),
+                                const Icon(Icons.error_outline, color: Colors.red, size: 48),
                                 const SizedBox(height: 8),
-                                Text(
-                                  'Gagal memuat rekomendasi',
-                                  style: TextStyle(color: Colors.grey.shade600),
-                                ),
+                                Text('Gagal memuat rekomendasi', style: TextStyle(color: Colors.grey.shade600)),
                                 const SizedBox(height: 8),
                                 ElevatedButton(
                                   onPressed: () {
@@ -354,25 +337,13 @@ class _RecommendationViewState extends State<_RecommendationView> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  Icons.no_meals,
-                                  size: 48,
-                                  color: Colors.grey.shade400,
-                                ),
+                                Icon(Icons.no_meals, size: 48, color: Colors.grey.shade400),
                                 const SizedBox(height: 12),
-                                Text(
-                                  'Belum ada rencana untuk hari ini',
-                                  style: TextStyle(color: Colors.grey.shade600),
-                                ),
+                                Text('Belum ada rencana untuk hari ini', style: TextStyle(color: Colors.grey.shade600)),
                                 const SizedBox(height: 16),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color.fromARGB(
-                                      255,
-                                      144,
-                                      121,
-                                      84,
-                                    ),
+                                    backgroundColor: const Color.fromARGB(255, 144, 121, 84),
                                     foregroundColor: Colors.white,
                                   ),
                                   onPressed: () {
@@ -384,17 +355,10 @@ class _RecommendationViewState extends State<_RecommendationView> {
                                           top: 20,
                                           left: 20,
                                           right: 20,
-                                          bottom:
-                                              MediaQuery.of(
-                                                context,
-                                              ).viewInsets.bottom +
-                                              20,
+                                          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
                                         ),
                                         child: Provider<List<Baby>?>.value(
-                                          value: Provider.of<List<Baby>?>(
-                                            context,
-                                            listen: false,
-                                          ),
+                                          value: Provider.of<List<Baby>?>(context, listen: false),
                                           child: const AddRecommendation(),
                                         ),
                                       ),
@@ -408,24 +372,24 @@ class _RecommendationViewState extends State<_RecommendationView> {
                         : SingleChildScrollView(
                             padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                             child: Column(
+                              // CHANGED: now tracks the original mealIndex per hour slot
                               children: (() {
-                                final Map<int, Meal> mealSlots = {};
-                                if (_recommendation != null) {
-                                  for (final meal in _recommendation!.meals) {
-                                    final hour =
-                                        int.tryParse(meal.time.split('.')[0]) ??
-                                        0;
-                                    mealSlots[hour] = meal;
-                                  }
+                                final Map<int, int> hourToIndex = {};
+                                for (var i = 0; i < _recommendation!.meals.length; i++) {
+                                  final meal = _recommendation!.meals[i];
+                                  final hour = int.tryParse(meal.time.split('.')[0]) ?? 0;
+                                  hourToIndex[hour] = i;
                                 }
                                 return List.generate(24, (hour) {
-                                  final meal = mealSlots[hour];
-                                  final timeLabel =
-                                      '${hour.toString().padLeft(2, '0')}.00';
+                                  final mealIndex = hourToIndex[hour];
+                                  final meal = mealIndex != null ? _recommendation!.meals[mealIndex] : null;
+                                  final timeLabel = '${hour.toString().padLeft(2, '0')}.00';
                                   return _TimeLineRow(
                                     timeLabel: timeLabel,
                                     hasSlot: meal != null,
                                     meal: meal,
+                                    mealIndex: mealIndex,
+                                    onToggleEaten: _handleToggleEaten,
                                   );
                                 });
                               })(),
@@ -452,11 +416,15 @@ class _TimeLineRow extends StatelessWidget {
   final String timeLabel;
   final bool hasSlot;
   final Meal? meal;
+  final int? mealIndex; // ADDED
+  final Future<void> Function(int mealIndex, bool newValue) onToggleEaten; // CHANGED
 
   const _TimeLineRow({
     required this.timeLabel,
     required this.hasSlot,
     this.meal,
+    this.mealIndex,
+    required this.onToggleEaten,
   });
 
   @override
@@ -474,26 +442,24 @@ class _TimeLineRow extends StatelessWidget {
                     onTap: () {
                       showDialog(
                         context: context,
-                        builder: (_) => RecommendationDetailDialog(meal: meal!),
+                        builder: (_) => RecommendationDetailDialog(
+                          meal: meal!,
+                          isEaten: meal!.isEaten,
+                          onToggleEaten: (newValue) =>
+                              onToggleEaten(mealIndex!, newValue), // CHANGED
+                        ),
                       );
                     },
                     child: Card(
-                      color: Color(0xFFFDF8F2),
+                      color: const Color(0xFFFDF8F2),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
+                        side: const BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
                       ),
                       elevation: 2,
-                      margin: const EdgeInsets.only(
-                        right: 8,
-                        bottom: 8,
-                        top: 0,
-                      ),
+                      margin: const EdgeInsets.only(right: 8, bottom: 8, top: 0),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -502,40 +468,26 @@ class _TimeLineRow extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 2,
-                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 144, 121, 84),
+                                    color: const Color.fromARGB(255, 144, 121, 84),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
-                                    meal?.type ??
-                                        '', // ✏️ badge shows meal type
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    ),
+                                    meal?.type ?? '',
+                                    style: const TextStyle(color: Colors.white, fontSize: 10),
                                   ),
                                 ),
-                                SizedBox(height: 4),
-                                // ASI slots don't have a name
+                                const SizedBox(height: 4),
                                 if (meal?.name != null)
                                   Text(
                                     meal!.name!,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                   )
                                 else
-                                  Text(
+                                  const Text(
                                     'Air Susu Ibu',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                   ),
                               ],
                             ),
@@ -546,10 +498,7 @@ class _TimeLineRow extends StatelessWidget {
                                 height: 48,
                                 color: const Color.fromARGB(255, 122, 105, 95),
                                 child: Icon(
-                                  // different icon for ASI
-                                  meal?.type == 'ASI'
-                                      ? Icons.water_drop
-                                      : Icons.lunch_dining,
+                                  meal?.type == 'ASI' ? Icons.water_drop : Icons.lunch_dining,
                                   color: Colors.white,
                                   size: 24,
                                 ),
@@ -570,16 +519,11 @@ class _TimeLineRow extends StatelessWidget {
                   ),
           ),
 
-          // right: line + time label (unchanged)
           SizedBox(
             width: 52,
             child: Column(
               children: [
-                Container(
-                  width: 1.5,
-                  height: 12,
-                  color: activeColor.withOpacity(0.2),
-                ),
+                Container(width: 1.5, height: 12, color: activeColor.withOpacity(0.2)),
                 Container(
                   width: 7,
                   height: 7,
@@ -588,12 +532,7 @@ class _TimeLineRow extends StatelessWidget {
                     color: hasSlot ? activeColor : activeColor.withOpacity(0.3),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    width: 1.5,
-                    color: activeColor.withOpacity(0.2),
-                  ),
-                ),
+                Expanded(child: Container(width: 1.5, color: activeColor.withOpacity(0.2))),
               ],
             ),
           ),
@@ -602,10 +541,7 @@ class _TimeLineRow extends StatelessWidget {
             width: 40,
             child: Padding(
               padding: const EdgeInsets.only(top: 6),
-              child: Text(
-                timeLabel,
-                style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
-              ),
+              child: Text(timeLabel, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
             ),
           ),
         ],

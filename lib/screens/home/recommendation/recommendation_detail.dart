@@ -1,13 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:rumi/models/meal.dart';
 
-class RecommendationDetailDialog extends StatelessWidget {
+// =====================
+// CHANGED: StatelessWidget -> StatefulWidget, added isEaten + onToggleEaten
+// =====================
+class RecommendationDetailDialog extends StatefulWidget {
   final Meal meal;
-  const RecommendationDetailDialog({super.key, required this.meal});
+  final bool isEaten; // ADDED
+  final ValueChanged<bool> onToggleEaten; // ADDED
+
+  const RecommendationDetailDialog({
+    super.key,
+    required this.meal,
+    required this.isEaten, // ADDED
+    required this.onToggleEaten, // ADDED
+  });
+
+  @override
+  State<RecommendationDetailDialog> createState() =>
+      _RecommendationDetailDialogState();
+}
+
+class _RecommendationDetailDialogState
+    extends State<RecommendationDetailDialog> {
+  late bool _isEaten = widget.isEaten;
+
+  void _handleToggle() {
+    setState(() => _isEaten = !_isEaten);
+    widget.onToggleEaten(
+      _isEaten,
+    ); // triggers parent's backend write + snackbar
+  }
 
   @override
   Widget build(BuildContext context) {
+    final meal = widget.meal; // CHANGED: was `meal` param, now widget.meal
     final isAsi = meal.type == 'ASI';
+    // END CHANGE
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -107,6 +136,54 @@ class RecommendationDetailDialog extends StatelessWidget {
             ),
 
             const SizedBox(height: 12),
+
+            // =====================
+            // ADDED: toggle row, same visual language as MealCard's inline toggle
+            // =====================
+            GestureDetector(
+              onTap: _handleToggle,
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: _isEaten
+                      ? const Color.fromARGB(255, 144, 121, 84).withOpacity(0.1)
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: const Color(0xFFE8D5B7),
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _isEaten
+                          ? Icons.check_circle
+                          : Icons.check_circle_outline,
+                      color: _isEaten
+                          ? const Color.fromARGB(255, 144, 121, 84)
+                          : Colors.grey.shade400,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      _isEaten ? 'Sudah dimakan' : 'Tandai sudah dimakan',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: _isEaten
+                            ? const Color.fromARGB(255, 144, 121, 84)
+                            : Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // END CHANGE
             Divider(color: const Color(0xFFE8D5B7), height: 1),
 
             // scrollable body
@@ -126,8 +203,9 @@ class RecommendationDetailDialog extends StatelessWidget {
                           child: Column(
                             children: meal.ingredients!.map((ingredient) {
                               return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4,
+                                ),
                                 child: Row(
                                   children: [
                                     Container(
@@ -167,8 +245,9 @@ class RecommendationDetailDialog extends StatelessWidget {
                           child: Column(
                             children: meal.steps!.asMap().entries.map((entry) {
                               return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 6,
+                                ),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -219,8 +298,7 @@ class RecommendationDetailDialog extends StatelessWidget {
                       _DetailCard(
                         child: Text(
                           meal.reason!,
-                          style:
-                              const TextStyle(fontSize: 14, height: 1.5),
+                          style: const TextStyle(fontSize: 14, height: 1.5),
                         ),
                       ),
                     ],

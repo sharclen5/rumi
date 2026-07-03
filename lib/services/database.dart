@@ -207,4 +207,28 @@ class DatabaseService {
     if (!doc.exists) return null;
     return Recommendation.fromFirestore(doc.data() as Map<String, dynamic>);
   }
+
+  // toggle isEaten for a single meal within a day's doc
+  Future<void> toggleMealEaten(
+    String babyId,
+    String date,
+    int mealIndex,
+  ) async {
+    final docId = '${babyId}_$date';
+    final docRef = recommendationCollection.doc(docId);
+    final snapshot = await docRef.get();
+    if (!snapshot.exists) return;
+
+    final data = snapshot.data() as Map<String, dynamic>;
+    final meals = List<Map<String, dynamic>>.from(
+      (data['meals'] as List).map((m) => Map<String, dynamic>.from(m)),
+    );
+
+    if (mealIndex < 0 || mealIndex >= meals.length) return;
+
+    final currentValue = meals[mealIndex]['isEaten'] ?? false;
+    meals[mealIndex]['isEaten'] = !currentValue;
+
+    await docRef.update({'meals': meals});
+  }
 }

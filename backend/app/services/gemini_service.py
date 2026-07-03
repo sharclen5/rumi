@@ -47,7 +47,7 @@ def _get_single_day(
         ) -> str:
     
     
-    # build the prompt with all baby context
+# build the prompt with all baby context
     prompt = f"""
     Kamu adalah ahli gizi bayi. Berikan rekomendasi menu MPASI untuk hari ini dalam format JSON.
 
@@ -69,7 +69,26 @@ def _get_single_day(
     {'Sesuaikan tekstur makanan dengan jumlah gigi bayi.' if tooth_count is not None else ''}
 
     Tentukan jadwal makan yang sesuai berdasarkan usia koreksi bayi sesuai panduan WHO dan IDAI.
-    
+
+    PENTING - Ketersediaan bahan:
+    Gunakan HANYA bahan makanan yang mudah ditemukan di pasar tradisional, warung,
+    atau supermarket umum di Indonesia. Prioritaskan bahan lokal, musiman, dan
+    terjangkau secara ekonomi untuk rumah tangga Indonesia pada umumnya.
+    Hindari bahan impor atau sulit didapat (contoh yang HARUS dihindari: quinoa,
+    chia seed, kale, blueberry, keju impor khusus). Sebagai gantinya gunakan
+    padanan lokal (contoh: beras/beras merah, biji selasih atau tanpa substitusi,
+    bayam/kangkung, pisang/pepaya, tempe/tahu untuk protein nabati).
+    Metode masak juga harus realistis untuk dapur rumahan (kukus, rebus, tim),
+    tanpa alat khusus seperti oven atau blender mahal, kecuali blender/saringan
+    biasa yang umum dimiliki.
+
+    PENTING - Nama menu:
+    Buat nama menu singkat dan sederhana, maksimal 3-4 kata, seperti nama masakan
+    sehari-hari yang biasa didengar orang tua (contoh: "Bubur Ayam Wortel",
+    "Tim Tahu Bayam", "Nasi Tim Ikan"). JANGAN gunakan nama yang panjang atau
+    terlalu deskriptif (contoh yang HARUS dihindari: "Bubur Saring Ayam Wortel
+    dengan Tambahan Minyak Zaitun untuk Tekstur Lembut").
+
     Kembalikan HANYA JSON valid tanpa teks lain, tanpa markdown, tanpa backtick.
     Format JSON:
     {{
@@ -80,7 +99,8 @@ def _get_single_day(
           "name": "nama menu",
           "ingredients": ["bahan 1", "bahan 2"],
           "steps": ["langkah 1", "langkah 2"],
-          "reason": "alasan pemilihan menu"
+          "reason": "alasan pemilihan menu",
+          "foodGroup": ["karbohidrat", "protein_hewani"]
         }},
         {{
           "time": "06.00",
@@ -88,12 +108,22 @@ def _get_single_day(
           "name": null,
           "ingredients": null,
           "steps": null,
-          "reason": null
+          "reason": null,
+          "foodGroup": null
         }}
       ]
     }}
 
     Type hanya boleh: "ASI", "Sarapan", "Makan Siang", "Makan Malam", atau "Snack".
+
+    # ADDED: foodGroup tagging rules
+    foodGroup harus berupa array berisi satu atau lebih dari nilai berikut
+    (gunakan HANYA nilai ini, tulis dalam bahasa Inggris/snake_case persis seperti contoh):
+    "karbohidrat", "protein_hewani", "protein_nabati", "sayuran", "buah", "lemak_tambahan".
+    Isi foodGroup sesuai kandungan nyata pada menu (boleh lebih dari satu jika menu campuran,
+    misal tim ayam wortel = ["karbohidrat", "protein_hewani", "sayuran"]).
+    Untuk slot dengan type "ASI", foodGroup harus null.
+    # END ADDED
     """
 
     # CHANGED: retry with exponential backoff, fallback to secondary model on repeated failure
@@ -127,6 +157,41 @@ def _get_single_day(
         raise RuntimeError(f"Gemini returned empty response (finish_reason={finish_reason})")
 
     return _clean_json_text(response.text)
+
+ # ADDED: allowed foodGroup values, kept in sync with prompt enum
+ALLOWED_FOOD_GROUPS = {
+    "karbohidrat",
+    "protein_hewani",
+    "protein_nabati",
+    "sayuran",
+    "buah",
+    "lemak_tambahan",
+}
+
+def _validate_food_groups(meals: list) -> list:
+    for meal in meals:
+        if meal.get('type') == 'ASI':
+            meal['foodGroup'] = None
+            continue
+
+        fg = meal.get('foodGroup')
+        if fg is None:
+            meal['foodGroup'] = []
+            continue
+
+        if not isinstance(fg, list):
+            fg = [fg]
+
+        valid = [g for g in fg if isinstance(g, str) and g in ALLOWED_FOOD_GROUPS]
+        invalid = [g for g in fg if g not in valid]
+
+        if invalid:
+            print(f"[gemini_service] Dropped invalid foodGroup values {invalid} for meal '{meal.get('name')}'")
+
+        meal['foodGroup'] = valid
+        meal['isEaten'] = False
+    return meals
+# END ADDED
 
 # ADDED: weekly recommendation loop with per-day Firestore writes
 def get_weekly_recommendation(
@@ -170,6 +235,10 @@ def get_weekly_recommendation(
         )
 
         parsed = json.loads(raw)
+
+        # ADDED: validate/sanitize foodGroup tags before persisting
+        parsed['meals'] = _validate_food_groups(parsed.get('meals', []))
+        # END ADDED
 
         # write to Firestore immediately after each day is generated
         doc_id = f'{baby_id}_{current_date}'
