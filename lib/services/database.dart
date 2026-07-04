@@ -231,4 +231,21 @@ class DatabaseService {
 
     await docRef.update({'meals': meals});
   }
+
+  // ADDED: stream of all recommendations for a baby, most recent first
+  Stream<List<Recommendation>> getRecommendationHistory(String babyId) {
+    return recommendationCollection
+        .where('baby_id', isEqualTo: babyId)
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Recommendation.fromFirestore(
+                  doc.data() as Map<String, dynamic>,
+                ),
+              )
+              .toList(),
+        );
+  }
 }

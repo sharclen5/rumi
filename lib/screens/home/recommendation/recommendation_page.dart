@@ -51,8 +51,18 @@ class _RecommendationViewState extends State<_RecommendationView> {
 
   String _monthName(int month) {
     const months = [
-      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
     ];
     return months[month - 1];
   }
@@ -113,9 +123,9 @@ class _RecommendationViewState extends State<_RecommendationView> {
         setState(() {
           _recommendation!.meals[mealIndex] = previousMeal;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal memperbarui status: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Gagal memperbarui status: $e')));
       }
     }
   }
@@ -200,11 +210,18 @@ class _RecommendationViewState extends State<_RecommendationView> {
                     babies.isEmpty
                         ? const Row(
                             children: [
-                              Icon(Icons.circle, color: Colors.white38, size: 10),
+                              Icon(
+                                Icons.circle,
+                                color: Colors.white38,
+                                size: 10,
+                              ),
                               SizedBox(width: 6),
                               Text(
                                 'Belum ada profil bayi yang aktif',
-                                style: TextStyle(color: Colors.white70, fontSize: 13),
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 13,
+                                ),
                               ),
                             ],
                           )
@@ -214,14 +231,24 @@ class _RecommendationViewState extends State<_RecommendationView> {
                               value: activeBaby?.id,
                               dropdownColor: const Color(0xFFF5EBD9),
                               iconEnabledColor: Colors.black,
-                              style: const TextStyle(color: Colors.black, fontSize: 13),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                              ),
                               hint: const Row(
                                 children: [
-                                  Icon(Icons.circle, color: Colors.white54, size: 10),
+                                  Icon(
+                                    Icons.circle,
+                                    color: Colors.white54,
+                                    size: 10,
+                                  ),
                                   SizedBox(width: 6),
                                   Text(
                                     'Belum ada profil bayi yang aktif',
-                                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -229,11 +256,18 @@ class _RecommendationViewState extends State<_RecommendationView> {
                                 return babies.map((baby) {
                                   return Row(
                                     children: [
-                                      const Icon(Icons.circle, color: Colors.greenAccent, size: 10),
+                                      const Icon(
+                                        Icons.circle,
+                                        color: Colors.greenAccent,
+                                        size: 10,
+                                      ),
                                       const SizedBox(width: 6),
                                       Text(
                                         'Profil aktif: ${baby.fullName} · ${baby.ageInMonths} bulan',
-                                        style: const TextStyle(color: Colors.black, fontSize: 13),
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                        ),
                                       ),
                                     ],
                                   );
@@ -244,13 +278,18 @@ class _RecommendationViewState extends State<_RecommendationView> {
                                   value: baby.id,
                                   child: Text(
                                     '${baby.fullName} · ${baby.ageInMonths} bulan',
-                                    style: const TextStyle(color: Colors.black, fontSize: 13),
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                    ),
                                   ),
                                 );
                               }).toList(),
                               onChanged: (selectedId) {
                                 if (selectedId != null) {
-                                  DatabaseService(uid: widget.uid).setActiveBaby(selectedId);
+                                  DatabaseService(
+                                    uid: widget.uid,
+                                  ).setActiveBaby(selectedId);
                                 }
                               },
                             ),
@@ -317,9 +356,16 @@ class _RecommendationViewState extends State<_RecommendationView> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                                const Icon(
+                                  Icons.error_outline,
+                                  color: Colors.red,
+                                  size: 48,
+                                ),
                                 const SizedBox(height: 8),
-                                Text('Gagal memuat rekomendasi', style: TextStyle(color: Colors.grey.shade600)),
+                                Text(
+                                  'Gagal memuat rekomendasi',
+                                  style: TextStyle(color: Colors.grey.shade600),
+                                ),
                                 const SizedBox(height: 8),
                                 ElevatedButton(
                                   onPressed: () {
@@ -337,13 +383,25 @@ class _RecommendationViewState extends State<_RecommendationView> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.no_meals, size: 48, color: Colors.grey.shade400),
+                                Icon(
+                                  Icons.no_meals,
+                                  size: 48,
+                                  color: Colors.grey.shade400,
+                                ),
                                 const SizedBox(height: 12),
-                                Text('Belum ada rencana untuk hari ini', style: TextStyle(color: Colors.grey.shade600)),
+                                Text(
+                                  'Belum ada rencana untuk hari ini',
+                                  style: TextStyle(color: Colors.grey.shade600),
+                                ),
                                 const SizedBox(height: 16),
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(255, 144, 121, 84),
+                                    backgroundColor: const Color.fromARGB(
+                                      255,
+                                      144,
+                                      121,
+                                      84,
+                                    ),
                                     foregroundColor: Colors.white,
                                   ),
                                   onPressed: () {
@@ -355,10 +413,17 @@ class _RecommendationViewState extends State<_RecommendationView> {
                                           top: 20,
                                           left: 20,
                                           right: 20,
-                                          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                                          bottom:
+                                              MediaQuery.of(
+                                                context,
+                                              ).viewInsets.bottom +
+                                              20,
                                         ),
                                         child: Provider<List<Baby>?>.value(
-                                          value: Provider.of<List<Baby>?>(context, listen: false),
+                                          value: Provider.of<List<Baby>?>(
+                                            context,
+                                            listen: false,
+                                          ),
                                           child: const AddRecommendation(),
                                         ),
                                       ),
@@ -375,15 +440,24 @@ class _RecommendationViewState extends State<_RecommendationView> {
                               // CHANGED: now tracks the original mealIndex per hour slot
                               children: (() {
                                 final Map<int, int> hourToIndex = {};
-                                for (var i = 0; i < _recommendation!.meals.length; i++) {
+                                for (
+                                  var i = 0;
+                                  i < _recommendation!.meals.length;
+                                  i++
+                                ) {
                                   final meal = _recommendation!.meals[i];
-                                  final hour = int.tryParse(meal.time.split('.')[0]) ?? 0;
+                                  final hour =
+                                      int.tryParse(meal.time.split('.')[0]) ??
+                                      0;
                                   hourToIndex[hour] = i;
                                 }
                                 return List.generate(24, (hour) {
                                   final mealIndex = hourToIndex[hour];
-                                  final meal = mealIndex != null ? _recommendation!.meals[mealIndex] : null;
-                                  final timeLabel = '${hour.toString().padLeft(2, '0')}.00';
+                                  final meal = mealIndex != null
+                                      ? _recommendation!.meals[mealIndex]
+                                      : null;
+                                  final timeLabel =
+                                      '${hour.toString().padLeft(2, '0')}.00';
                                   return _TimeLineRow(
                                     timeLabel: timeLabel,
                                     hasSlot: meal != null,
@@ -417,7 +491,8 @@ class _TimeLineRow extends StatelessWidget {
   final bool hasSlot;
   final Meal? meal;
   final int? mealIndex; // ADDED
-  final Future<void> Function(int mealIndex, bool newValue) onToggleEaten; // CHANGED
+  final Future<void> Function(int mealIndex, bool newValue)
+  onToggleEaten; // CHANGED
 
   const _TimeLineRow({
     required this.timeLabel,
@@ -450,61 +525,98 @@ class _TimeLineRow extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Card(
-                      color: const Color(0xFFFDF8F2),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
-                      ),
-                      elevation: 2,
-                      margin: const EdgeInsets.only(right: 8, bottom: 8, top: 0),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromARGB(255, 144, 121, 84),
-                                    borderRadius: BorderRadius.circular(20),
+                    child: Opacity(
+                      opacity: meal!.isEaten ? 0.5 : 1.0,
+                      child: Card(
+                        color: const Color(0xFFFDF8F2),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(
+                            color: Color(0xFFE8D5B7),
+                            width: 1.5,
+                          ),
+                        ),
+                        elevation: 2,
+                        margin: const EdgeInsets.only(
+                          right: 8,
+                          bottom: 8,
+                          top: 0,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                        255,
+                                        144,
+                                        121,
+                                        84,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      meal?.type ?? '',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                      ),
+                                    ),
                                   ),
-                                  child: Text(
-                                    meal?.type ?? '',
-                                    style: const TextStyle(color: Colors.white, fontSize: 10),
+                                  const SizedBox(height: 4),
+                                  if (meal?.name != null)
+                                    Text(
+                                      meal!.name!,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    )
+                                  else
+                                    const Text(
+                                      'Air Susu Ibu',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Container(
+                                  width: 48,
+                                  height: 48,
+                                  color: const Color.fromARGB(
+                                    255,
+                                    122,
+                                    105,
+                                    95,
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                if (meal?.name != null)
-                                  Text(
-                                    meal!.name!,
-                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                  )
-                                else
-                                  const Text(
-                                    'Air Susu Ibu',
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                  child: Icon(
+                                    meal?.type == 'ASI'
+                                        ? Icons.water_drop
+                                        : Icons.lunch_dining,
+                                    color: Colors.white,
+                                    size: 24,
                                   ),
-                              ],
-                            ),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Container(
-                                width: 48,
-                                height: 48,
-                                color: const Color.fromARGB(255, 122, 105, 95),
-                                child: Icon(
-                                  meal?.type == 'ASI' ? Icons.water_drop : Icons.lunch_dining,
-                                  color: Colors.white,
-                                  size: 24,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -523,7 +635,11 @@ class _TimeLineRow extends StatelessWidget {
             width: 52,
             child: Column(
               children: [
-                Container(width: 1.5, height: 12, color: activeColor.withOpacity(0.2)),
+                Container(
+                  width: 1.5,
+                  height: 12,
+                  color: activeColor.withOpacity(0.2),
+                ),
                 Container(
                   width: 7,
                   height: 7,
@@ -532,7 +648,12 @@ class _TimeLineRow extends StatelessWidget {
                     color: hasSlot ? activeColor : activeColor.withOpacity(0.3),
                   ),
                 ),
-                Expanded(child: Container(width: 1.5, color: activeColor.withOpacity(0.2))),
+                Expanded(
+                  child: Container(
+                    width: 1.5,
+                    color: activeColor.withOpacity(0.2),
+                  ),
+                ),
               ],
             ),
           ),
@@ -541,7 +662,10 @@ class _TimeLineRow extends StatelessWidget {
             width: 40,
             child: Padding(
               padding: const EdgeInsets.only(top: 6),
-              child: Text(timeLabel, style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
+              child: Text(
+                timeLabel,
+                style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+              ),
             ),
           ),
         ],

@@ -8,7 +8,11 @@ class NutritionCardStars extends StatelessWidget {
   final String uid;
   final String babyId;
 
-  const NutritionCardStars({super.key, required this.uid, required this.babyId});
+  const NutritionCardStars({
+    super.key,
+    required this.uid,
+    required this.babyId,
+  });
 
   static const _coreGroups = {
     'karbohidrat': 'Karbohidrat',
@@ -31,6 +35,7 @@ class NutritionCardStars extends StatelessWidget {
     for (final meal in meals) {
       if (meal is! Map) continue;
       if (meal['type'] == 'ASI') continue;
+      if (meal['isEaten'] != true) continue;
       final fg = meal['foodGroup'];
       if (fg is List) {
         for (final g in fg) {
@@ -96,7 +101,9 @@ class NutritionCardStars extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.only(right: 4),
                         child: Icon(
-                          filled ? Icons.star_rounded : Icons.star_border_rounded,
+                          filled
+                              ? Icons.star_rounded
+                              : Icons.star_border_rounded,
                           color: const Color.fromARGB(255, 144, 121, 84),
                           size: 28,
                         ),
@@ -106,7 +113,10 @@ class NutritionCardStars extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     '$starCount dari ${_coreGroups.length} kelompok gizi terpenuhi hari ini',
-                    style: const TextStyle(fontSize: 13, color: Color(0xFF363434)),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF363434),
+                    ),
                   ),
                   const SizedBox(height: 14),
 

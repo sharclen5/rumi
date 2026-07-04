@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rumi/screens/authenticate/authenticate.dart';
 import 'package:rumi/models/user.dart';
+import 'package:rumi/screens/home/history/history_page.dart';
 import 'package:rumi/screens/home/home.dart';
 import 'package:rumi/screens/home/profile/profile.dart';
 import 'package:rumi/screens/home/recommendation/recommendation_page.dart';
@@ -28,7 +29,8 @@ class _WrapperState extends State<Wrapper> {
     final pages = [
       Home(onTabTapped: (i) => setState(() => _currentIndex = i)),
       RecommendationPage(onTabTapped: (i) => setState(() => _currentIndex = i)),
-      const Placeholder(), // Riwayat - belum dibuat
+      const Placeholder(), // ADDED: Buat Rencana slot — never actually rendered,
+      HistoryPage(onTabTapped: (i) => setState(() => _currentIndex = i)),
       ProfilePage(onTabTapped: (i) => setState(() => _currentIndex = i)),
     ];
 

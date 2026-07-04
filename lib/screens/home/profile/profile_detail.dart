@@ -285,7 +285,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
       ),
       extendBody: true,
       bottomNavigationBar: BottomNavBar(
-        currentIndex: 3,
+        currentIndex: 4,
         onTap: (index) {
           Navigator.pop(context);
           widget.onTabTapped(index);

@@ -104,7 +104,7 @@ class ProfilePage extends StatelessWidget {
           ),
           extendBody: true,
           bottomNavigationBar: BottomNavBar(
-            currentIndex: 3,
+            currentIndex: 4,
             onTap: onTabTapped,
             photoUrl: snapshot.data?.photoUrl,
           ),
