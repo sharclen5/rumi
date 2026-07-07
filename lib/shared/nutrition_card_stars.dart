@@ -7,11 +7,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class NutritionCardStars extends StatelessWidget {
   final String uid;
   final String babyId;
+  final Set<String>? previewCoveredGroups;
 
   const NutritionCardStars({
     super.key,
     required this.uid,
     required this.babyId,
+    this.previewCoveredGroups,
   });
 
   static const _coreGroups = {
@@ -48,6 +50,10 @@ class NutritionCardStars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (previewCoveredGroups != null) {
+      return _buildCard(covered: previewCoveredGroups!, hasData: true);
+    }
+
     return StreamBuilder<DocumentSnapshot>(
       stream: FirebaseFirestore.instance
           .collection('users')
@@ -60,102 +66,101 @@ class NutritionCardStars extends StatelessWidget {
         final covered = hasData
             ? _coveredGroups(snapshot.data!.data() as Map<String, dynamic>)
             : <String>{};
-        final starCount = _coreGroups.keys.where(covered.contains).length;
-
-        return Card(
-          color: const Color(0xFFFDF8F2),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: const BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
-          ),
-          elevation: 2,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Kelengkapan Gizi Hari Ini',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF363434),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                const Divider(),
-                const SizedBox(height: 10),
-                if (!hasData)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(
-                      'Belum ada rencana menu untuk hari ini.',
-                      style: TextStyle(fontSize: 13, color: Color(0xFF7A7A7A)),
-                    ),
-                  )
-                else ...[
-                  // star row
-                  Row(
-                    children: List.generate(_coreGroups.length, (i) {
-                      final filled = i < starCount;
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: Icon(
-                          filled
-                              ? Icons.star_rounded
-                              : Icons.star_border_rounded,
-                          color: const Color.fromARGB(255, 144, 121, 84),
-                          size: 28,
-                        ),
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    '$starCount dari ${_coreGroups.length} kelompok gizi terpenuhi hari ini',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Color(0xFF363434),
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-
-                  // per-group checklist
-                  ..._coreGroups.entries.map((entry) {
-                    final isCovered = covered.contains(entry.key);
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: [
-                          Icon(
-                            isCovered
-                                ? Icons.check_circle_rounded
-                                : Icons.radio_button_unchecked_rounded,
-                            size: 16,
-                            color: isCovered
-                                ? const Color.fromARGB(255, 144, 121, 84)
-                                : Colors.grey.shade400,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            entry.value,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: isCovered
-                                  ? const Color(0xFF363434)
-                                  : Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
-              ],
-            ),
-          ),
-        );
+        return _buildCard(covered: covered, hasData: hasData);
       },
+    );
+  }
+
+  Widget _buildCard({required Set<String> covered, required bool hasData}) {
+    final starCount = _coreGroups.keys.where(covered.contains).length;
+
+    return Card(
+      color: const Color(0xFFFDF8F2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Color(0xFFE8D5B7), width: 1.5),
+      ),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Kelengkapan Gizi Hari Ini',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF363434),
+              ),
+            ),
+            const SizedBox(height: 6),
+            const Divider(),
+            const SizedBox(height: 10),
+            if (!hasData)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  'Belum ada rencana menu untuk hari ini.',
+                  style: TextStyle(fontSize: 13, color: Color(0xFF7A7A7A)),
+                ),
+              )
+            else ...[
+              // star row
+              Row(
+                children: List.generate(_coreGroups.length, (i) {
+                  final filled = i < starCount;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: Icon(
+                      filled ? Icons.star_rounded : Icons.star_border_rounded,
+                      color: const Color.fromARGB(255, 144, 121, 84),
+                      size: 28,
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '$starCount dari ${_coreGroups.length} kelompok gizi terpenuhi hari ini',
+                style: const TextStyle(fontSize: 13, color: Color(0xFF363434)),
+              ),
+              const SizedBox(height: 14),
+
+              // per-group checklist
+              ..._coreGroups.entries.map((entry) {
+                final isCovered = covered.contains(entry.key);
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        isCovered
+                            ? Icons.check_circle_rounded
+                            : Icons.radio_button_unchecked_rounded,
+                        size: 16,
+                        color: isCovered
+                            ? const Color.fromARGB(255, 144, 121, 84)
+                            : Colors.grey.shade400,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        entry.value,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isCovered
+                              ? const Color(0xFF363434)
+                              : Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

@@ -29,17 +29,31 @@ class DatabaseService {
     }, SetOptions(merge: true));
   }
 
-  // ADDED: cek apakah user ini udah pernah liat intro slides
+  // cek apakah user ini udah pernah liat intro slides
   Future<bool> hasSeenIntro() async {
     final doc = await userDocument.get();
     final data = doc.data() as Map<String, dynamic>?;
     return data?['hasSeenIntro'] ?? false;
   }
 
-  // ADDED: tandain user ini udah liat intro slides
+  // tandain user ini udah liat intro slides
   Future<void> markIntroAsSeen() async {
     return await userDocument.set({
       'hasSeenIntro': true,
+    }, SetOptions(merge: true));
+  }
+
+  // cek apakah user ini udah pernah liat coach mark tour di Home
+  Future<bool> hasSeenHomeTour() async {
+    final doc = await userDocument.get();
+    final data = doc.data() as Map<String, dynamic>?;
+    return data?['hasSeenHomeTour'] ?? false;
+  }
+
+  // tandain user ini udah liat coach mark tour di Home
+  Future<void> markHomeTourAsSeen() async {
+    return await userDocument.set({
+      'hasSeenHomeTour': true,
     }, SetOptions(merge: true));
   }
 

@@ -8,13 +8,15 @@ import 'package:rumi/shared/loading.dart';
 class TodayScheduleCard extends StatefulWidget {
   final String uid;
   final String babyId;
-  final Function(int) onTabTapped; // ADDED: needed to jump to Rekomendasi tab
+  final Function(int) onTabTapped; // needed to jump to Rekomendasi tab
+  final Recommendation? previewRecommendation;
 
   const TodayScheduleCard({
     super.key,
     required this.uid,
     required this.babyId,
     required this.onTabTapped,
+    this.previewRecommendation,
   });
 
   @override
@@ -30,7 +32,12 @@ class _TodayScheduleCardState extends State<TodayScheduleCard> {
   @override
   void initState() {
     super.initState();
-    _loadTodayRecommendation();
+    if (widget.previewRecommendation != null) {
+      _recommendation = widget.previewRecommendation;
+      _isLoading = false;
+    } else {
+      _loadTodayRecommendation();
+    }
   }
 
   Future<void> _loadTodayRecommendation() async {
@@ -165,19 +172,22 @@ class _TodayScheduleCardState extends State<TodayScheduleCard> {
                       meal: meal,
                       isNext: absoluteIndex == highlightIndex,
                       isLast: localIndex == shownIndices.length - 1,
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => RecommendationDetailDialog(
-                            meal: meal,
-                            isEaten: meal.isEaten,
-                            onToggleEaten: (newValue) => _handleToggleEaten(
-                              absoluteIndex,
-                              newValue,
-                            ), // CHANGED: uses absolute index now
-                          ),
-                        );
-                      },
+                      onTap: widget.previewRecommendation != null
+                          ? () {}
+                          : () {
+                              showDialog(
+                                context: context,
+                                builder: (_) => RecommendationDetailDialog(
+                                  meal: meal,
+                                  isEaten: meal.isEaten,
+                                  onToggleEaten: (newValue) =>
+                                      _handleToggleEaten(
+                                        absoluteIndex,
+                                        newValue,
+                                      ), // CHANGED: uses absolute index now
+                                ),
+                              );
+                            },
                     );
                   }).toList(),
                 );

@@ -27,7 +27,7 @@ class _WrapperState extends State<Wrapper> {
     return DatabaseService(uid: uid).hasSeenIntro();
   }
 
-  // ADDED: dipanggil pas IntroSlides selesai (baik lewat Done atau Skip)
+  // dipanggil pas IntroSlides selesai (baik lewat Done atau Skip)
   Future<void> _markIntroAsSeen(String uid) async {
     await DatabaseService(uid: uid).markIntroAsSeen();
     // trigger rebuild biar FutureBuilder re-check _hasSeenIntro()
@@ -69,7 +69,7 @@ class _WrapperState extends State<Wrapper> {
           return pages[_currentIndex];
         }
 
-        // ADDED: belum ada baby -> cek udah pernah liat intro apa belum
+        // belum ada baby -> cek udah pernah liat intro apa belum
         return FutureBuilder<bool>(
           future: _hasSeenIntro(user.uid),
           builder: (context, introSnapshot) {
@@ -79,12 +79,12 @@ class _WrapperState extends State<Wrapper> {
 
             final seenIntro = introSnapshot.data ?? false;
 
-            // CHANGED: pake IntroSlides beneran, bukan placeholder lagi
+            // pake IntroSlides beneran, bukan placeholder lagi
             if (!seenIntro) {
               return IntroSlides(onDone: () => _markIntroAsSeen(user.uid));
             }
 
-            // AAdd Baby form
+            // Add Baby form
             return const AddBabyForms();
           },
         );

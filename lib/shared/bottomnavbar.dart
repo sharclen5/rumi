@@ -8,11 +8,13 @@ class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
   final String? photoUrl;
+  final VoidCallback? onAddRecommendationTap;
   const BottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
     this.photoUrl,
+    this.onAddRecommendationTap,
   });
 
   @override
@@ -42,6 +44,7 @@ class BottomNavBar extends StatelessWidget {
               currentIndex: currentIndex,
               onTap: onTap,
             ),
+
             _NavItem(
               icon: Icons.recommend_rounded,
               label: 'Rekomendasi',
@@ -49,12 +52,17 @@ class BottomNavBar extends StatelessWidget {
               currentIndex: currentIndex,
               onTap: onTap,
             ),
+
             _NavItem(
               icon: Icons.add_circle_outline,
               label: 'Buat Rencana',
               index: 2,
               currentIndex: currentIndex,
               onTap: (i) {
+                if (onAddRecommendationTap != null) {
+                  onAddRecommendationTap!();
+                  return;
+                }
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
@@ -73,6 +81,7 @@ class BottomNavBar extends StatelessWidget {
                 );
               },
             ),
+
             _NavItem(
               icon: Icons.history_rounded,
               label: 'Riwayat',
@@ -80,6 +89,7 @@ class BottomNavBar extends StatelessWidget {
               currentIndex: currentIndex,
               onTap: onTap,
             ),
+
             _AvatarNavItem(
               index: 4,
               currentIndex: currentIndex,

@@ -113,6 +113,7 @@ class _HistoryViewState extends State<_HistoryView> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
                     const SizedBox(height: 8),
                     babies.isEmpty
                         ? const Row(

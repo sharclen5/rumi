@@ -15,10 +15,15 @@ import 'package:rumi/shared/today_schedule_card.dart';
 // powertoys buat bikin tab brave stay on top
 // win + ctrl + t
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   final Function(int) onTabTapped;
-  Home({super.key, required this.onTabTapped});
+  const Home({super.key, required this.onTabTapped});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
@@ -195,6 +200,7 @@ class Home extends StatelessWidget {
                       showCard: true,
                       showArrows: true,
                     ),
+
                     SizedBox(height: 16),
 
                     // Kelengkapan Gizi Hari Ini
@@ -207,7 +213,7 @@ class Home extends StatelessWidget {
                       TodayScheduleCard(
                         uid: user.uid,
                         babyId: activeBaby.id,
-                        onTabTapped: onTabTapped,
+                        onTabTapped: widget.onTabTapped,
                       ),
 
                     // Tips Card
@@ -270,10 +276,11 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
+
             extendBody: true,
             bottomNavigationBar: BottomNavBar(
               currentIndex: 0,
-              onTap: onTabTapped,
+              onTap: widget.onTabTapped,
               photoUrl: snapshot.data?.photoUrl,
             ),
           );

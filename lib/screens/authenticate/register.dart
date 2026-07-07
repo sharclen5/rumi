@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rumi/services/auth.dart';
 import 'package:rumi/shared/loading.dart';
+import 'package:rumi/shared/constants.dart';
 
 class Register extends StatefulWidget {
   final VoidCallback toggleView;
@@ -59,7 +60,7 @@ class _RegisterState extends State<Register> {
                           const Text(
                             'Register',
                             style: TextStyle(
-                              color: Color(0xFF755DC1),
+                              color: Color(0xFF363434),
                               fontSize: 27,
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w500,
@@ -76,14 +77,8 @@ class _RegisterState extends State<Register> {
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w400,
                             ),
-                            decoration: const InputDecoration(
+                            decoration: textInputDecoration.copyWith(
                               labelText: 'Email',
-                              labelStyle: TextStyle(
-                                color: Color(0xFF755DC1),
-                                fontSize: 15,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -91,15 +86,6 @@ class _RegisterState extends State<Register> {
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Color(0xFF837E93),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFF9F7BFF),
                                 ),
                               ),
                             ),
@@ -119,14 +105,8 @@ class _RegisterState extends State<Register> {
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w400,
                             ),
-                            decoration: const InputDecoration(
+                            decoration: textInputDecoration.copyWith(
                               labelText: 'First Name',
-                              labelStyle: TextStyle(
-                                color: Color(0xFF755DC1),
-                                fontSize: 15,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -134,15 +114,6 @@ class _RegisterState extends State<Register> {
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Color(0xFF837E93),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFF9F7BFF),
                                 ),
                               ),
                             ),
@@ -162,14 +133,8 @@ class _RegisterState extends State<Register> {
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w400,
                             ),
-                            decoration: const InputDecoration(
+                            decoration: textInputDecoration.copyWith(
                               labelText: 'Last Name',
-                              labelStyle: TextStyle(
-                                color: Color(0xFF755DC1),
-                                fontSize: 15,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -177,15 +142,6 @@ class _RegisterState extends State<Register> {
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Color(0xFF837E93),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFF9F7BFF),
                                 ),
                               ),
                             ),
@@ -206,14 +162,8 @@ class _RegisterState extends State<Register> {
                             validator: (val) => val == null || val.isEmpty
                                 ? 'Select your gender'
                                 : null,
-                            decoration: const InputDecoration(
-                              labelText: 'Gender',
-                              labelStyle: TextStyle(
-                                color: Color(0xFF755DC1),
-                                fontSize: 15,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
+                            decoration: textInputDecoration.copyWith(
+                              labelText: 'Select Gender',
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -221,15 +171,6 @@ class _RegisterState extends State<Register> {
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Color(0xFF837E93),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFF9F7BFF),
                                 ),
                               ),
                             ),
@@ -256,14 +197,8 @@ class _RegisterState extends State<Register> {
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w400,
                             ),
-                            decoration: const InputDecoration(
+                            decoration: textInputDecoration.copyWith(
                               labelText: 'Phone Number',
-                              labelStyle: TextStyle(
-                                color: Color(0xFF755DC1),
-                                fontSize: 15,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -271,15 +206,6 @@ class _RegisterState extends State<Register> {
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Color(0xFF837E93),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFF9F7BFF),
                                 ),
                               ),
                             ),
@@ -300,14 +226,8 @@ class _RegisterState extends State<Register> {
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w400,
                             ),
-                            decoration: const InputDecoration(
+                            decoration: textInputDecoration.copyWith(
                               labelText: 'Password',
-                              labelStyle: TextStyle(
-                                color: Color(0xFF755DC1),
-                                fontSize: 15,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -315,15 +235,6 @@ class _RegisterState extends State<Register> {
                                 borderSide: BorderSide(
                                   width: 1,
                                   color: Color(0xFF837E93),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color(0xFF9F7BFF),
                                 ),
                               ),
                             ),
@@ -343,7 +254,7 @@ class _RegisterState extends State<Register> {
                               height: 56,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF9F7BFF),
+                                  backgroundColor: const Color(0xFF363434),
                                 ),
                                 child: const Text(
                                   'Register',
@@ -419,7 +330,7 @@ class _RegisterState extends State<Register> {
                                 child: const Text(
                                   'Sign In',
                                   style: TextStyle(
-                                    color: Color(0xFF755DC1),
+                                    color: Color(0xFF393939),
                                     fontSize: 13,
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w500,

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rumi/models/user.dart';
 import 'package:rumi/shared/loading.dart';
 import 'package:rumi/shared/allergy_selector.dart';
+import 'package:rumi/screens/onboarding/coach_mark_demo_page.dart';
 
 // CHANGED: full-screen 4-step form, bukan bottom sheet lagi.
 // Dipake di 2 tempat: (1) wajib diisi pas onboarding lewat Wrapper,
@@ -59,11 +60,11 @@ class _AddBabyFormsState extends State<AddBabyForms> {
   // validasi dimatiin sementara buat keperluan adjustment.
   // jangan lupa di-uncomment lagi bagian validate() di bawah kalo udah selesai
   void _goToNextStep() {
-    // matiin komennya kalo udah kelar adjustment
-    // final currentFormState = _stepKeys[_currentStep].currentState;
-    // if (currentFormState != null && !currentFormState.validate()) {
-    //   return;
-    // }
+    // komen if pertama buat bolak balik ganti style
+    final currentFormState = _stepKeys[_currentStep].currentState;
+    if (currentFormState != null && !currentFormState.validate()) {
+      return;
+    }
     if (_currentStep < _totalSteps - 1) {
       setState(() => _currentStep++);
       _pageController.nextPage(
@@ -109,11 +110,16 @@ class _AddBabyFormsState extends State<AddBabyForms> {
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    // ADDED: kalo dipanggil dari BabyPage (ada halaman sebelumnya di stack), pop balik.
+    // kalo dipanggil dari BabyPage (ada halaman sebelumnya di stack), pop balik.
     // kalo dipanggil dari Wrapper pas onboarding (ga ada yang bisa di-pop), biarin aja —
     // StreamBuilder<List<Baby>> di Wrapper bakal otomatis switch ke homepage
     if (Navigator.canPop(context)) {
       Navigator.pop(context);
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const CoachMarkDemoPage()),
+      );
     }
   }
 

@@ -87,7 +87,7 @@ class ProfilePage extends StatelessWidget {
                     press: () {},
                   ),
                   ProfileMenu(
-                    text: "Help Center",
+                    text: "Tutorial",
                     icon: Icon(Icons.help, size: 22),
                     press: () {},
                   ),
