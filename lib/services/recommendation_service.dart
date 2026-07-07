@@ -4,7 +4,9 @@ import 'package:http/http.dart' as http;
 class RecommendationService {
   // static const String _baseUrl = 'http://localhost:8000'; //web
   // static const String _baseUrl = 'http://10.0.2.2:8000'; // Android emulator
-  static const String _baseUrl = 'http://192.168.100.9:8000'; // physical device
+  // static const String _baseUrl = 'http://192.168.100.9:8000'; // physical device
+  static const String _baseUrl =
+      'https://rumi-backend.fastapicloud.dev'; //tes deploy
 
   Future<void> getWeeklyRecommendation({
     // return type changed

@@ -14,8 +14,14 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))  # authenticates with
 
 # initialize Firebase Admin SDK for backend Firestore writes
 if not firebase_admin._apps:
-    cred = credentials.Certificate('../script/serviceAccountKey.json')
+    firebase_creds_json = os.getenv("FIREBASE_SERVICE_ACCOUNT")
+    if firebase_creds_json:
+        cred_dict = json.loads(firebase_creds_json)
+        cred = credentials.Certificate(cred_dict)
+    else:
+        cred = credentials.Certificate('../script/serviceAccountKey.json')
     firebase_admin.initialize_app(cred)
+# END CHANGED
 db = firestore.client()
 
 # ADDED: strip markdown fences in case Gemini wraps JSON despite prompt instructions
