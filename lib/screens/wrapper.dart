@@ -11,6 +11,8 @@ import 'package:rumi/models/baby.dart';
 import 'package:rumi/services/database.dart';
 import 'package:rumi/screens/onboarding/intro_slides.dart';
 import 'package:rumi/screens/home/baby/add_baby_forms.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:rumi/shared/tour_keys.dart';
 
 class Wrapper extends StatefulWidget {
   const Wrapper({super.key});
@@ -21,6 +23,34 @@ class Wrapper extends StatefulWidget {
 
 class _WrapperState extends State<Wrapper> {
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // ADDED: single global registration for the whole app session.
+    // BottomNavBar's Showcase wraps are always in the tree once a user is
+    // logged in, so ShowcaseView must be registered before that, not tied
+    // to CoachMarkDemoPage's lifecycle.
+    ShowcaseView.register(
+      enableAutoScroll: true,
+      scrollDuration: const Duration(milliseconds: 300),
+      onComplete: (index, key) {
+        if (key == TourKeys.profilePage) {
+          final user = Provider.of<User?>(context, listen: false);
+          if (user != null) {
+            DatabaseService(uid: user.uid).markHomeTourAsSeen();
+          }
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // ADDED
+    ShowcaseView.get().unregister();
+    super.dispose();
+  }
 
   // cek flag one-time intro
   Future<bool> _hasSeenIntro(String uid) async {

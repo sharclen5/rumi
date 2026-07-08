@@ -8,6 +8,7 @@ import 'package:rumi/services/auth.dart';
 import 'package:rumi/services/database.dart';
 import 'package:rumi/shared/bottomnavbar.dart';
 import 'package:rumi/screens/home/profile/profile_detail.dart';
+import 'package:rumi/screens/onboarding/coach_mark_demo_page.dart';
 
 class ProfilePage extends StatelessWidget {
   final Function(int) onTabTapped;
@@ -89,7 +90,12 @@ class ProfilePage extends StatelessWidget {
                   ProfileMenu(
                     text: "Tutorial",
                     icon: Icon(Icons.help, size: 22),
-                    press: () {},
+                    press: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const CoachMarkDemoPage(),
+                      ),
+                    ),
                   ),
                   ProfileMenu(
                     text: "Log Out",

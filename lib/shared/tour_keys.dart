@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-// ADDED: coach mark tour GlobalKeys, shared across Wrapper, Home,
+// coach mark tour GlobalKeys, shared across Wrapper, Home,
 // BottomNavBar, and other tab pages. Declared here instead of on
 // _WrapperState so nothing needs to be passed through constructors —
 // any widget that needs a key just imports this file.
 class TourKeys {
-  // Home tab
+  // Home section
   static final homeNavIcon = GlobalKey(); // step 1
   static final babyDropdown = GlobalKey(); // step 2
   static final calendarStrip = GlobalKey(); // step 3
@@ -26,20 +26,9 @@ class TourKeys {
   static final profileNavIcon = GlobalKey(); // step 12
   static final profilePage = GlobalKey(); // step 13
 
-  // ADDED: canonical full-tour order, used for replay (always starts from Home)
-  static List<GlobalKey> get fullSequence => [
-    homeNavIcon,
-    babyDropdown,
-    calendarStrip,
-    nutritionCard,
-    todayScheduleCard,
-    aiTipsCard,
-    rekomendasiNavIcon,
-    rekomendasiEmptyState,
-    addButton,
-    riwayatNavIcon,
-    riwayatPage,
-    profileNavIcon,
-    profilePage,
-  ];
+  static final demoHomeNavIcon = GlobalKey();
+  static final demoRekomendasiNavIcon = GlobalKey();
+  static final demoAddButton = GlobalKey();
+  static final demoRiwayatNavIcon = GlobalKey();
+  static final demoProfileNavIcon = GlobalKey();
 }

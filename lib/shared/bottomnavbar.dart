@@ -3,22 +3,50 @@ import 'package:provider/provider.dart';
 import 'package:rumi/screens/home/recommendation/add_recommendation.dart';
 import 'dart:convert';
 import 'package:rumi/models/baby.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:rumi/shared/tour_keys.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
   final String? photoUrl;
   final VoidCallback? onAddRecommendationTap;
+  // overridable keys, default to the real app's TourKeys
+  final GlobalKey? homeKey;
+  final GlobalKey? rekomendasiKey;
+  final GlobalKey? addButtonKey;
+  final GlobalKey? riwayatKey;
+  final GlobalKey? profileKey;
   const BottomNavBar({
     super.key,
     required this.currentIndex,
     required this.onTap,
     this.photoUrl,
     this.onAddRecommendationTap,
+    this.homeKey,
+    this.rekomendasiKey,
+    this.addButtonKey,
+    this.riwayatKey,
+    this.profileKey,
   });
 
   @override
   Widget build(BuildContext context) {
+    // ADDED: resolve overridable keys once, use everywhere below —
+    // both in the Showcase `key:` and in onTargetClick's chaining,
+    // so a demo instance never references real TourKeys
+    final effectiveHomeKey = homeKey ?? TourKeys.homeNavIcon;
+    final effectiveRekomendasiKey =
+        rekomendasiKey ?? TourKeys.rekomendasiNavIcon;
+    final effectiveAddButtonKey = addButtonKey ?? TourKeys.addButton;
+    final effectiveRiwayatKey = riwayatKey ?? TourKeys.riwayatNavIcon;
+    final effectiveProfileKey = profileKey ?? TourKeys.profileNavIcon;
+
+    // ADDED: chained targets also need a demo/real switch. Simplest: derive
+    // "is this a demo instance" from whether homeKey was overridden, and
+    // pick the matching chain target keys.
+    final isDemo = homeKey != null;
+
     return Padding(
       padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
       child: Container(
@@ -37,64 +65,140 @@ class BottomNavBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _NavItem(
-              icon: Icons.home_rounded,
-              label: 'Beranda',
-              index: 0,
-              currentIndex: currentIndex,
-              onTap: onTap,
+            Showcase(
+              // (wraps Beranda)
+              key: effectiveHomeKey,
+              title: 'Beranda',
+              description:
+                  'Halaman utama Rumi, ringkasan harian si kecil ada di sini',
+              child: _NavItem(
+                icon: Icons.home_rounded,
+                label: 'Beranda',
+                index: 0,
+                currentIndex: currentIndex,
+                onTap: onTap,
+              ),
             ),
 
-            _NavItem(
-              icon: Icons.recommend_rounded,
-              label: 'Rekomendasi',
-              index: 1,
-              currentIndex: currentIndex,
-              onTap: onTap,
-            ),
-
-            _NavItem(
-              icon: Icons.add_circle_outline,
-              label: 'Buat Rencana',
-              index: 2,
-              currentIndex: currentIndex,
-              onTap: (i) {
-                if (onAddRecommendationTap != null) {
-                  onAddRecommendationTap!();
-                  return;
-                }
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (outerContext) => Padding(
-                    padding: EdgeInsets.only(
-                      top: 20,
-                      left: 20,
-                      right: 20,
-                      bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-                    ),
-                    child: Provider<List<Baby>?>.value(
-                      value: Provider.of<List<Baby>?>(context, listen: false),
-                      child: const AddRecommendation(),
-                    ),
-                  ),
-                );
+            Showcase(
+              // ADDED (wraps Rekomendasi)
+              key: effectiveRekomendasiKey,
+              title: 'Rekomendasi',
+              description:
+                  'Lihat rencana menu yang sudah dibuat untuk si kecil',
+              disposeOnTap: true,
+              onTargetClick: () {
+                onTap(1);
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ShowcaseView.get().startShowCase(
+                    isDemo
+                        ? [
+                            TourKeys
+                                .rekomendasiEmptyState, // demo reuses same mimic keys as real page — see note below
+                            effectiveAddButtonKey,
+                            effectiveRiwayatKey,
+                          ]
+                        : [
+                            TourKeys.rekomendasiEmptyState,
+                            effectiveAddButtonKey,
+                            effectiveRiwayatKey,
+                          ],
+                  );
+                });
               },
+              child: _NavItem(
+                icon: Icons.recommend_rounded,
+                label: 'Rekomendasi',
+                index: 1,
+                currentIndex: currentIndex,
+                onTap: onTap,
+              ),
             ),
 
-            _NavItem(
-              icon: Icons.history_rounded,
-              label: 'Riwayat',
-              index: 3,
-              currentIndex: currentIndex,
-              onTap: onTap,
+            Showcase(
+              // (wraps Buat Rencana) — tooltip only, tap just advances
+              key: effectiveAddButtonKey,
+              title: 'Buat Rencana',
+              description: 'Buat rencana menu baru untuk si kecil dari sini',
+              child: _NavItem(
+                icon: Icons.add_circle_outline,
+                label: 'Buat Rencana',
+                index: 2,
+                currentIndex: currentIndex,
+                onTap: (i) {
+                  if (onAddRecommendationTap != null) {
+                    onAddRecommendationTap!();
+                    return;
+                  }
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (outerContext) => Padding(
+                      padding: EdgeInsets.only(
+                        top: 20,
+                        left: 20,
+                        right: 20,
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+                      ),
+                      child: Provider<List<Baby>?>.value(
+                        value: Provider.of<List<Baby>?>(context, listen: false),
+                        child: const AddRecommendation(),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
 
-            _AvatarNavItem(
-              index: 4,
-              currentIndex: currentIndex,
-              onTap: onTap,
-              photoUrl: photoUrl,
+            Showcase(
+              // ADDED (wraps Riwayat)
+              key: effectiveRiwayatKey,
+              title: 'Riwayat',
+              description: 'Lihat riwayat menu yang sudah pernah diberikan',
+              disposeOnTap: true,
+              onTargetClick: () {
+                onTap(3);
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  if (!context.mounted)
+                    return; // guard against disposed context
+                  ShowcaseView.get().startShowCase([
+                    TourKeys.riwayatPage,
+                    effectiveProfileKey,
+                  ]);
+                });
+              },
+              child: _NavItem(
+                icon: Icons.history_rounded,
+                label: 'Riwayat',
+                index: 3,
+                currentIndex: currentIndex,
+                onTap: onTap,
+              ),
+            ),
+
+            Showcase(
+              // ADDED (wraps Profile avatar)
+              key: effectiveProfileKey,
+              title: 'Profil',
+              description: 'Kelola profil bayi dan pengaturan akun di sini',
+              disposeOnTap: true,
+              onTargetClick: () {
+                onTap(4);
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  if (!context.mounted)
+                    return; // guard against disposed context
+                  ShowcaseView.get().startShowCase([
+                    TourKeys.profilePage,
+                    effectiveProfileKey,
+                  ]);
+                });
+              },
+              child: _AvatarNavItem(
+                index: 4,
+                currentIndex: currentIndex,
+                onTap: onTap,
+                photoUrl: photoUrl,
+              ),
             ),
           ],
         ),
