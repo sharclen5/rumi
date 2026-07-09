@@ -7,9 +7,6 @@ import 'package:rumi/shared/nutrition_card_stars.dart';
 import 'package:rumi/shared/today_schedule_card.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:rumi/shared/tour_keys.dart';
-import 'package:rumi/services/database.dart';
-import 'package:provider/provider.dart';
-import 'package:rumi/models/user.dart';
 
 // Dedicated, self-contained coach mark tour page. Entirely fake data, no
 // Firestore, no real navigation — fakes its own "current tab" switching via
@@ -423,7 +420,7 @@ class _CoachMarkDemoPageState extends State<CoachMarkDemoPage> {
     );
   }
 
-  // ---- Profile mimic ----
+ 
   // ---- Profile mimic ----
   Widget _buildProfileSection() {
     return Scaffold(

@@ -41,8 +41,6 @@ class _AddRecommendationState extends State<AddRecommendation> {
   }
 
   Widget build(BuildContext context) {
-    final user = Provider.of<User?>(context);
-    final uid = user?.uid ?? '';
     final babies = Provider.of<List<Baby>?>(context);
 
     return _isLoading

@@ -68,6 +68,7 @@ class BottomNavBar extends StatelessWidget {
             Showcase(
               // (wraps Beranda)
               key: effectiveHomeKey,
+              disableBarrierInteraction: true,
               title: 'Beranda',
               description:
                   'Halaman utama Rumi, ringkasan harian si kecil ada di sini',
@@ -119,6 +120,7 @@ class BottomNavBar extends StatelessWidget {
             Showcase(
               // (wraps Buat Rencana) — tooltip only, tap just advances
               key: effectiveAddButtonKey,
+              disableBarrierInteraction: true,
               title: 'Buat Rencana',
               description: 'Buat rencana menu baru untuk si kecil dari sini',
               child: _NavItem(
