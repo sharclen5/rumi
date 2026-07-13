@@ -46,9 +46,9 @@ class Meal {
   }
 
   // since Meal is immutable — toggling creates a new instance
-  Meal copyWith({bool? isEaten}) {
+  Meal copyWith({bool? isEaten, String? time}) {
     return Meal(
-      time: time,
+      time: time ?? this.time,
       type: type,
       name: name,
       ingredients: ingredients,

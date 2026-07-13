@@ -84,11 +84,11 @@ class BottomNavBar extends StatelessWidget {
             Showcase(
               // ADDED (wraps Rekomendasi)
               key: effectiveRekomendasiKey,
+              disableBarrierInteraction: true,
               title: 'Rekomendasi',
               description:
                   'Lihat rencana menu yang sudah dibuat untuk si kecil',
-              disposeOnTap: true,
-              disableBarrierInteraction: true,
+              disposeOnTap: false,
               onTargetClick: () {
                 onTap(1);
                 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -156,10 +156,10 @@ class BottomNavBar extends StatelessWidget {
             Showcase(
               // ADDED (wraps Riwayat)
               key: effectiveRiwayatKey,
+              disableBarrierInteraction: true,
               title: 'Riwayat',
               description: 'Lihat riwayat menu yang sudah pernah diberikan',
-              disposeOnTap: true,
-              disableBarrierInteraction: true,
+              disposeOnTap: false,
               onTargetClick: () {
                 onTap(3);
                 Future.delayed(const Duration(milliseconds: 300), () {
@@ -183,10 +183,10 @@ class BottomNavBar extends StatelessWidget {
             Showcase(
               // ADDED (wraps Profile avatar)
               key: effectiveProfileKey,
+              disableBarrierInteraction: true,
               title: 'Profil',
               description: 'Kelola profil bayi dan pengaturan akun di sini',
-              disposeOnTap: true,
-              disableBarrierInteraction: true,
+              disposeOnTap: false,
               onTargetClick: () {
                 onTap(4);
                 Future.delayed(const Duration(milliseconds: 300), () {
@@ -194,7 +194,6 @@ class BottomNavBar extends StatelessWidget {
                     return; // guard against disposed context
                   ShowcaseView.get().startShowCase([
                     TourKeys.profilePage,
-                    effectiveProfileKey,
                   ]);
                 });
               },

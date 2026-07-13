@@ -10,6 +10,7 @@ import 'package:rumi/models/recommendation.dart';
 import 'package:rumi/shared/loading.dart';
 import 'package:rumi/screens/home/recommendation/add_recommendation.dart';
 import 'package:rumi/screens/home/recommendation/recommendation_detail.dart';
+import 'package:rumi/screens/home/recommendation/edit_schedule.dart';
 
 class RecommendationPage extends StatelessWidget {
   final Function(int) onTabTapped;
@@ -168,7 +169,25 @@ class _RecommendationViewState extends State<_RecommendationView> {
                   bottom: 12.0,
                 ),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () async {
+                    if (_recommendation == null || _lastFetchedBaby == null)
+                      return;
+
+                    await handleEditSchedule(
+                      context: context,
+                      meals: _recommendation!.meals,
+                      dateLabel:
+                          '${_selectedDate.day} ${_monthName(_selectedDate.month)}, ${_dayName(_selectedDate.weekday)}',
+                      uid: widget.uid,
+                      babyId: _lastFetchedBaby!.id,
+                      dateStr: _selectedDateStr,
+                      onMealTimeChanged: (index, updatedMeal) {
+                        setState(() {
+                          _recommendation!.meals[index] = updatedMeal;
+                        });
+                      },
+                    );
+                  },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Container(

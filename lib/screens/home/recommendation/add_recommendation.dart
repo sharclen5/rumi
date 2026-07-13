@@ -54,9 +54,10 @@ class _AddRecommendationState extends State<AddRecommendation> {
             stream: _progressStream,
             builder: (context, snapshot) {
               final daysWritten = snapshot.data?.docs.length ?? 0;
+              final currentDay = (daysWritten + 1).clamp(1, _totalDays);
               return Loading(
                 progress: daysWritten / _totalDays,
-                message: 'Membuat hari ke-$daysWritten dari $_totalDays',
+                message: 'Membuat hari ke-$currentDay dari $_totalDays',
               );
             },
           )
@@ -395,11 +396,20 @@ class _AddRecommendationState extends State<AddRecommendation> {
                                   if (context.mounted) Navigator.pop(context);
                                 } catch (e) {
                                   if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Gagal membuat rencana: $e',
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                        title: const Text(
+                                          'Gagal Membuat Rencana',
                                         ),
+                                        content: Text('$e'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
                                       ),
                                     );
                                   }

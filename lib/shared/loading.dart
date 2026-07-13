@@ -12,7 +12,7 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
   late final AnimationController _simController;
 
-  @override 
+  @override
   void initState() {
     super.initState();
     _simController = AnimationController(
@@ -77,13 +77,28 @@ class _LoadingState extends State<Loading> with SingleTickerProviderStateMixin {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          '${(value * 100).round()}%',
-          style: TextStyle(
-            color: Color(0xFF363434),
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Color(0xFF363434),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${(value * 100).round()}%',
+              style: TextStyle(
+                color: Color(0xFF363434),
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ],
     );

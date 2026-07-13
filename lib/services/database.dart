@@ -263,6 +263,29 @@ class DatabaseService {
     await docRef.update({'meals': meals});
   }
 
+  Future<void> updateMealTime(
+    String babyId,
+    String date,
+    int mealIndex,
+    String newTime,
+  ) async {
+    final docId = '${babyId}_$date';
+    final docRef = recommendationCollection.doc(docId);
+    final snapshot = await docRef.get();
+    if (!snapshot.exists) return;
+
+    final data = snapshot.data() as Map<String, dynamic>;
+    final meals = List<Map<String, dynamic>>.from(
+      (data['meals'] as List).map((m) => Map<String, dynamic>.from(m)),
+    );
+
+    if (mealIndex < 0 || mealIndex >= meals.length) return;
+
+    meals[mealIndex]['time'] = newTime;
+
+    await docRef.update({'meals': meals});
+  }
+
   // ADDED: stream of all recommendations for a baby, most recent first
   Stream<List<Recommendation>> getRecommendationHistory(String babyId) {
     return recommendationCollection
