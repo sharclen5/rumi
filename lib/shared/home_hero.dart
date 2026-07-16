@@ -42,22 +42,37 @@ class HomeHero extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            getGreeting(),
-            style: const TextStyle(fontSize: 15, color: Color(0xFF6A655F)),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      getGreeting(),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Color(0xFF6A655F),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      greetingTitle,
+                      style: const TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF363434),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Image.asset('assets/images/logo_tp.png', height: 80),
+            ],
           ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            greetingTitle,
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF363434),
-            ),
-          ),
-
+          // END CHANGE
           const SizedBox(height: 12),
 
           Text(

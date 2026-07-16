@@ -134,7 +134,7 @@ class _AllergySelectorState extends State<AllergySelector> {
             ),
           ),
         ),
-        const SizedBox(height: 6), // ADDED
+        const SizedBox(height: 6),
         Text(
           // ADDED: guides users to Riwayat Penyakit for anything not in the list
           'Bila alergi anak Anda tidak terdaftar, silahkan tambahkan pada bagian Riwayat Penyakit.',

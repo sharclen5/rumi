@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rumi/models/user.dart';
 import 'package:rumi/shared/loading.dart';
 import 'package:rumi/shared/allergy_selector.dart';
+import 'package:flutter/services.dart';
 
 // CHANGED: full-screen 4-step form, bukan bottom sheet lagi.
 // Dipake di 2 tempat: (1) wajib diisi pas onboarding lewat Wrapper,
@@ -353,19 +354,43 @@ class _AddBabyFormsState extends State<AddBabyForms> {
             TextFormField(
               decoration: textInputDecoration.copyWith(labelText: 'Berat (kg)'),
               keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+              ],
               validator: (val) => val!.isEmpty ? 'Masukkan berat badan' : null,
               onChanged: (val) =>
                   setState(() => _currentWeight = double.tryParse(val)),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 6),
+            Text(
+              'Gunakan titik (.) untuk bilangan desimal',
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey.shade500,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            const SizedBox(height: 10.0),
             TextFormField(
               decoration: textInputDecoration.copyWith(
                 labelText: 'Tinggi (cm)',
               ),
               keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+              ],
               validator: (val) => val!.isEmpty ? 'Masukkan tinggi badan' : null,
               onChanged: (val) =>
                   setState(() => _currentHeight = double.tryParse(val)),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Gunakan titik (.) untuk bilangan desimal',
+              style: TextStyle(
+                fontSize: 11,
+                color: Colors.grey.shade500,
+                fontStyle: FontStyle.italic,
+              ),
             ),
             const SizedBox(height: 12.0),
             SwitchListTile(

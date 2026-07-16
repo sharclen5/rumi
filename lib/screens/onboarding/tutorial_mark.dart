@@ -313,23 +313,35 @@ class _TutorialMarkState extends State<TutorialMark> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            _getGreeting(),
-            style: const TextStyle(fontSize: 15, color: Color(0xFF6A655F)),
-          ),
-          const SizedBox(height: 4),
-          const Text(
-            'Bapak/Ibu',
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF363434),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Semoga hari ini menyenangkan bersama si kecil.',
-            style: TextStyle(color: Colors.grey.shade600),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _getGreeting(),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: Color(0xFF6A655F),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Bapak/Ibu',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF363434),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Image.asset('assets/images/logo_tp.png', height: 80),
+            ],
           ),
           const SizedBox(height: 5),
 
@@ -530,11 +542,6 @@ class _TutorialMarkState extends State<TutorialMark> {
     );
   }
 
-  // ---- Riwayat mimic ----
-  // CHANGED: fully redesigned — title + baby dropdown header, CalendarStrip,
-  // then a fake meal list card (mirrors _HistoryMealRow: check icon +
-  // time + label, dimmed when not eaten) instead of the old static
-  // placeholder text.
   Widget _buildRiwayatSection() {
     return Scaffold(
       appBar: AppBar(
@@ -557,47 +564,70 @@ class _TutorialMarkState extends State<TutorialMark> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // header: title + dropdown on the left, today-jump icon on the right
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
-                child: Column(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Riwayat MPASI',
-                      style: TextStyle(
-                        color: Color(0xFF363434),
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Riwayat MPASI',
+                            style: TextStyle(
+                              color: Color(0xFF363434),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.circle,
+                                color: Colors.greenAccent,
+                                size: 10,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                'Profil aktif: $_fakeBabyLabel',
+                                style: const TextStyle(
+                                  color: Color(0xFF363434),
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(
+                                Icons.arrow_drop_down,
+                                color: Color(0xFF363434),
+                                size: 18,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.circle,
-                          color: Colors.greenAccent,
-                          size: 10,
+                    // ADDED: static "hari ini" jump icon, mirrors HistoryPage's
+                    // dimmed-when-already-today container (always full opacity
+                    // here since the demo's date never changes)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        color: const Color.fromARGB(255, 122, 105, 95),
+                        child: const Icon(
+                          Icons.today,
+                          color: Colors.white,
+                          size: 22,
                         ),
-                        const SizedBox(width: 6),
-                        Text(
-                          'Profil aktif: $_fakeBabyLabel',
-                          style: const TextStyle(
-                            color: Color(0xFF363434),
-                            fontSize: 13,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(
-                          Icons.arrow_drop_down,
-                          color: Color(0xFF363434),
-                          size: 18,
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
 
               Expanded(
                 child: Showcase(
@@ -609,14 +639,35 @@ class _TutorialMarkState extends State<TutorialMark> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                        child: CalendarStrip(
-                          selectedDate: DateTime.now(),
-                          onDateSelected: (_) {},
-                          uid: _fakeUid,
-                          babyId: _fakeBabyId,
-                          showCard: true,
-                          showArrows: true,
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CalendarStrip(
+                              selectedDate: DateTime.now(),
+                              onDateSelected: (_) {},
+                              uid: _fakeUid,
+                              babyId: _fakeBabyId,
+                              showCard: true,
+                              showArrows: true,
+                            ),
+                            const SizedBox(height: 12),
+                            // CHANGED: weekday-first label to match HistoryPage's
+                            // "${_dayName(weekday)}, ${day} ${_monthName(month)}"
+                            Builder(
+                              builder: (context) {
+                                final now = DateTime.now();
+                                return Text(
+                                  '${_dayName(now.weekday)}, ${now.day} ${_monthName(now.month)}',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF363434),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -624,24 +675,12 @@ class _TutorialMarkState extends State<TutorialMark> {
                         child: ListView(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
                           children: [
-                            Card(
-                              color: const Color(0xFFFDF8F2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                side: const BorderSide(
-                                  color: Color(0xFFE8D5B7),
-                                  width: 1.5,
-                                ),
-                              ),
-                              elevation: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: _fakeRecommendation.meals
-                                      .map((meal) => _fakeHistoryMealRow(meal))
-                                      .toList(),
-                                ),
+                            _fakeCompletionSummaryCard(),
+                            const SizedBox(height: 12),
+                            ..._fakeRecommendation.meals.map(
+                              (meal) => Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: _fakeHistoryMealCard(meal),
                               ),
                             ),
                           ],
@@ -658,33 +697,162 @@ class _TutorialMarkState extends State<TutorialMark> {
     );
   }
 
-  // ADDED: static mimic of _HistoryMealRow from the real Riwayat page
-  Widget _fakeHistoryMealRow(Meal meal) {
-    final isAsi = meal.type == 'ASI';
-    final label = isAsi ? 'Air Susu Ibu' : (meal.name ?? '');
-    final opacity = meal.isEaten ? 1.0 : 0.4;
+  // ADDED: static mimic of _CompletionSummaryCard from the real Riwayat page
+  Widget _fakeCompletionSummaryCard() {
+    const brand = Color.fromARGB(255, 144, 121, 84);
+    const ink = Color(0xFF363434);
+    const cardBorder = Color(0xFFE8D5B7);
 
-    return Opacity(
-      opacity: opacity,
+    final total = _fakeRecommendation.meals.length;
+    final eaten = _fakeRecommendation.meals.where((m) => m.isEaten).length;
+    final ratio = total == 0 ? 0.0 : eaten / total;
+    final allDone = total > 0 && eaten == total;
+
+    return Card(
+      color: const Color(0xFFFDF8F2),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: cardBorder, width: 1.5),
+      ),
+      elevation: 2,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        child: Row(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              meal.isEaten ? Icons.check_circle : Icons.radio_button_unchecked,
-              size: 16,
-              color: meal.isEaten
-                  ? const Color.fromARGB(255, 144, 121, 84)
-                  : Colors.grey.shade500,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  allDone ? '🎉 Semua menu selesai' : 'Ringkasan hari ini',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: ink,
+                  ),
+                ),
+                Text(
+                  '$eaten / $total menu',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: brand,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                '${meal.time} · $label',
-                style: const TextStyle(fontSize: 13, color: Color(0xFF363434)),
+            const SizedBox(height: 10),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: LinearProgressIndicator(
+                value: ratio,
+                minHeight: 8,
+                backgroundColor: cardBorder.withOpacity(0.5),
+                valueColor: const AlwaysStoppedAnimation<Color>(brand),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // CHANGED: replaces the old _fakeHistoryMealRow — now mirrors
+  // _HistoryMealCard's icon-chip + type-badge + check-icon card style
+  // instead of a plain checklist row
+  Widget _fakeHistoryMealCard(Meal meal) {
+    const brand = Color.fromARGB(255, 144, 121, 84);
+    const brandDark = Color.fromARGB(255, 122, 105, 95);
+    const ink = Color(0xFF363434);
+    const cardBorder = Color(0xFFE8D5B7);
+
+    final isAsi = meal.type == 'ASI';
+    final label = isAsi ? 'Air Susu Ibu' : (meal.name ?? '');
+    final IconData mealIcon = isAsi
+        ? Icons.water_drop
+        : meal.type.toLowerCase() == 'snack'
+        ? Icons.cookie
+        : Icons.restaurant;
+
+    return Opacity(
+      opacity: meal.isEaten ? 1.0 : 0.55,
+      child: Card(
+        color: const Color(0xFFFDF8F2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: const BorderSide(color: cardBorder, width: 1.5),
+        ),
+        elevation: 2,
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  color: brandDark,
+                  child: Icon(mealIcon, color: Colors.white, size: 20),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: brand,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            meal.type,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          meal.time,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: ink,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                meal.isEaten
+                    ? Icons.check_circle
+                    : Icons.radio_button_unchecked,
+                size: 20,
+                color: meal.isEaten ? brand : Colors.grey.shade400,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -11,6 +11,8 @@ class IntroSlides extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IntroductionScreen(
+      globalBackgroundColor: const Color(0xFFF5ECDB),
+
       pages: [
         // slide 1: welcome
         PageViewModel(
@@ -18,11 +20,11 @@ class IntroSlides extends StatelessWidget {
           body:
               "Teman pintar untuk membantu perjalanan MPASI si kecil, dari rekomendasi menu sampai pemantauan gizi harian.",
           image: Center(
-            // ADDED: placeholder icon, ganti jadi Image.asset(...) kalo illustrationnya udah ada
-            child: Icon(
-              Icons.child_care,
-              size: 120,
-              color: const Color.fromARGB(255, 144, 121, 84),
+            child: Image.asset(
+              'assets/images/logo.png',
+              width: 400,
+              height: 400,
+              fit: BoxFit.cover,
             ),
           ),
           decoration: const PageDecoration(

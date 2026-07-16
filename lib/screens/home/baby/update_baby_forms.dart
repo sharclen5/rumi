@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rumi/models/user.dart';
 import 'package:rumi/shared/loading.dart';
 import 'package:rumi/shared/allergy_selector.dart';
+import 'package:flutter/services.dart';
 
 class UpdateBabyForms extends StatefulWidget {
   final Baby baby;
@@ -263,22 +264,66 @@ class _UpdateBabyFormsState extends State<UpdateBabyForms> {
                           Row(
                             children: [
                               Expanded(
-                                child: TextFormField(
-                                  controller: _weightController,
-                                  decoration: _fieldDecoration('Berat (kg)'),
-                                  keyboardType: TextInputType.number,
-                                  validator: (val) =>
-                                      val!.isEmpty ? 'Masukkan berat' : null,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFormField(
+                                      controller: _weightController,
+                                      decoration: _fieldDecoration(
+                                        'Berat (kg)',
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                          RegExp(r'[0-9.]'),
+                                        ),
+                                      ],
+                                      validator: (val) => val!.isEmpty
+                                          ? 'Masukkan berat'
+                                          : null,
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      'Gunakan titik (.) untuk bilangan desimal',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey.shade500,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               const SizedBox(width: 10),
                               Expanded(
-                                child: TextFormField(
-                                  controller: _heightController,
-                                  decoration: _fieldDecoration('Tinggi (cm)'),
-                                  keyboardType: TextInputType.number,
-                                  validator: (val) =>
-                                      val!.isEmpty ? 'Masukkan tinggi' : null,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFormField(
+                                      controller: _heightController,
+                                      decoration: _fieldDecoration(
+                                        'Tinggi (cm)',
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                          RegExp(r'[0-9.]'),
+                                        ),
+                                      ],
+                                      validator: (val) => val!.isEmpty
+                                          ? 'Masukkan tinggi'
+                                          : null,
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      'Gunakan titik (.) untuk bilangan desimal',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey.shade500,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
