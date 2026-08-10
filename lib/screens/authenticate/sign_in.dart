@@ -124,6 +124,9 @@ class _SignInState extends State<SignIn> {
   }
 
   Widget build(BuildContext context) {
+    // ADDED: sama kayak register.dart
+    final systemNavInset = MediaQuery.of(context).padding.bottom;
+
     return loading
         ? Loading()
         : Scaffold(
@@ -133,16 +136,23 @@ class _SignInState extends State<SignIn> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 75, top: 30),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Image.asset(
-                          "assets/images/vector-1.png",
-                          width: 413,
-                          height: 457,
-                        ),
-                      ],
+                    padding: const EdgeInsets.only(left: 10, top: 30),
+                    child: SizedBox(
+                      // ADDED: kasih ukuran box eksplisit yang cukup gede buat nampung badge yang overflow,
+                      // biar hit-test area-nya juga ikut segede itu, ga cuma segede gambar doang
+                      width:
+                          478, // 413 (lebar gambar) + 65 (overflow badge ke kiri)
+                      height: 457,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Image.asset(
+                            "assets/images/vector-1.png",
+                            width: 413,
+                            height: 457,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -308,7 +318,8 @@ class _SignInState extends State<SignIn> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 15),
+                          // CHANGED: 15 -> dihitung dari systemNavInset, sama alasannya kaya register.dart
+                          SizedBox(height: 24 + systemNavInset),
                         ],
                       ),
                     ),

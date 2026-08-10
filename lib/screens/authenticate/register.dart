@@ -34,6 +34,8 @@ class _RegisterState extends State<Register> {
 
   @override
   Widget build(BuildContext context) {
+    // ADDED: baca inset navbar sistem, sama kayak pattern yang udah dipake di bottomnavbar.dart
+    final systemNavInset = MediaQuery.of(context).padding.bottom;
     return loading
         ? Loading()
         : Scaffold(
@@ -44,18 +46,24 @@ class _RegisterState extends State<Register> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 1, top: 1),
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Image.asset(
-                          "assets/images/vector-3.png",
-                          width: 413,
-                          height: 457,
-                        ),
-                      ],
+                    child: SizedBox(
+                      // ADDED: sama kaya sign_in, kasih box lebih gede biar hit-test badge-nya kena
+                      width:
+                          500, // 413 + ruang buat badge yang overflow ke kanan
+                      height: 457,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Image.asset(
+                            "assets/images/vector-3.png",
+                            width: 413,
+                            height: 457,
+                          ), // TETEP SAMA, ga perlu Positioned, karena overflow-nya ke kanan (arah positif), jadi ga perlu digeser
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 2),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 50),
                     child: Form(
@@ -318,7 +326,7 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 6),
                           Text(
                             error,
                             style: const TextStyle(
@@ -352,7 +360,9 @@ class _RegisterState extends State<Register> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 30),
+                          // CHANGED: 50 -> dihitung dari systemNavInset, biar teks ga ketutup navbar HP
+                          // 24 tetep dipertahanin sebagai jarak "nafas" minimal, sama kaya di bottomnavbar.dart
+                          SizedBox(height: 24 + systemNavInset),
                         ],
                       ),
                     ),
