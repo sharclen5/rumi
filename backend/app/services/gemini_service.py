@@ -194,7 +194,9 @@ def get_weekly_recommendation(
         # END ADDED
 
         # write to Firestore immediately after each day is generated
-        doc_id = f'{baby_id}_{current_date}'
+        # CHANGED: doc_id sekarang include source, biar rag & baseline gak saling timpa
+        # kalo di-generate di hari & baby yang sama
+        doc_id = f'{baby_id}_{current_date}_baseline'
         db.collection('users').document(uid).collection('recommendations').document(doc_id).set({
             'baby_id': baby_id,
             'date': current_date,

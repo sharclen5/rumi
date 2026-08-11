@@ -88,7 +88,7 @@ class _RecommendationViewState extends State<_RecommendationView> {
     try {
       final result = await DatabaseService(
         uid: widget.uid,
-      ).getRecommendation(baby.id, _selectedDateStr);
+      ).getRecommendation(baby.id, _selectedDateStr, 'baseline');
 
       setState(() => _recommendation = result);
     } catch (e) {
@@ -115,7 +115,7 @@ class _RecommendationViewState extends State<_RecommendationView> {
     try {
       await DatabaseService(
         uid: widget.uid,
-      ).toggleMealEaten(_lastFetchedBaby!.id, _selectedDateStr, mealIndex);
+      ).toggleMealEaten(_lastFetchedBaby!.id, _selectedDateStr, mealIndex, 'baseline');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
