@@ -9,6 +9,9 @@ dependencies = [
     "python-dotenv",
     "pydantic",
     "firebase-admin",
+    "langchain",
+    "langchain-google-genai",
+    "langchain-core",
 ]
 
 [tool.uv]
