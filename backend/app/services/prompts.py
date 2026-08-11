@@ -1,9 +1,10 @@
 from langchain_core.prompts import PromptTemplate
 
-# ADDED: prompt dipisah ke file sendiri, biar strukturnya sama kayak rumi-rag,
-# dan gampang dibandingin di bab metodologi skripsi nanti.
-# Sama persis kayak versi rumi-rag punya, TAPI tanpa bagian "Konteks dari
-# sumber terpercaya" karena base app ga ada retrieval sama sekali.
+# prompt dipisah ke file sendiri, biar gemini_service.py ga kepanjangan
+# dan gampang ditunjuk di bab metodologi skripsi nanti.
+# Semua teks sama persis kayak versi f-string asli, kecuali bagian if/else
+# (premature_note, asi_instruction, tooth_instruction)
+# soalnya PromptTemplate cuma bisa substitusi {variable}, ga bisa inline if/else.
 
 MPASI_PROMPT = PromptTemplate.from_template("""
 Kamu adalah ahli gizi bayi. Berikan rekomendasi menu MPASI untuk hari ini dalam format JSON.
@@ -24,8 +25,6 @@ Data bayi:
 Gunakan usia koreksi sebagai acuan utama untuk menentukan jadwal dan tekstur MPASI.
 {asi_instruction}
 {tooth_instruction}
-
-Tentukan jadwal makan yang sesuai berdasarkan usia koreksi bayi sesuai panduan WHO dan IDAI.
 
 PENTING - Ketersediaan bahan:
 Gunakan HANYA bahan makanan yang mudah ditemukan di pasar tradisional, warung,
@@ -71,9 +70,7 @@ alergi, riwayat medis) jika relevan dengan menu tersebut — misalnya tekstur
 sesuai jumlah gigi/usia koreksi, aman dari alergi yang disebutkan, porsi
 sesuai berat/tinggi badan, atau penyesuaian akibat riwayat medis. Tidak
 semua data harus disebutkan di setiap menu, cukup yang benar-benar relevan.
-Jika relevan, kaitkan juga dengan rekomendasi gizi dari WHO, IDAI, atau
-Kemenkes RI (contoh: "sesuai anjuran WHO untuk konsumsi protein hewani
-harian"). Hindari alasan generik seperti "bergizi dan sehat untuk bayi"
+Hindari alasan generik seperti "bergizi dan sehat untuk bayi"
 tanpa penjelasan spesifik.
 
 PENTING - Nama menu:
@@ -116,4 +113,24 @@ foodGroup harus berupa array berisi satu atau lebih dari nilai berikut
 Isi foodGroup sesuai kandungan nyata pada menu (boleh lebih dari satu jika menu campuran,
 misal tim ayam wortel = ["karbohidrat", "protein_hewani", "sayuran"]).
 Untuk slot dengan type "ASI", foodGroup harus null.
+""")
+
+DAILY_TIP_PROMPT = PromptTemplate.from_template("""
+Kamu adalah asisten MPASI bernama "Rumi AI". Tugasmu adalah memberikan satu tips singkat untuk orang tua dari bayi bernama {baby_name}, berdasarkan kondisi berikut:
+
+- Usia (usia koreksi jika prematur): {age_in_months} bulan
+- Berat badan: {weight} kg
+- Tinggi badan: {height} cm
+- Jumlah gigi: {tooth_count_display}
+- Status ASI: {asi_status}
+- Riwayat alergi: {allergies_display}
+- Riwayat medis: {medical_history_display}
+
+Instruksi:
+- Tulis dalam Bahasa Indonesia yang sopan tapi santai, seperti teman yang berbicara — bukan bahasa yang kaku/formal, tapi juga jangan terlalu gaul atau tidak sopan.
+- Sebut nama {baby_name} secara natural di awal atau tengah kalimat.
+- Fokus pada SATU aspek paling relevan hari ini (contoh: kesiapan tekstur, kebutuhan protein hewani, kecukupan porsi, atau pengingat alergi jika ada riwayatnya).
+- Panjang maksimal 2 kalimat.
+- Jangan gunakan format JSON, markdown, atau tanda kutip. Hanya teks biasa.
+- Jangan sebutkan angka berat/tinggi badan secara langsung, cukup gunakan sebagai pertimbangan konteks saja.
 """)
