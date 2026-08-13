@@ -181,9 +181,12 @@ class _MealCardItemState extends State<_MealCardItem> {
     });
 
     try {
-      await DatabaseService(
-        uid: widget.uid,
-      ).toggleMealEaten(widget.babyId, widget.date, widget.mealIndex, 'baseline');
+      await DatabaseService(uid: widget.uid).toggleMealEaten(
+        widget.babyId,
+        widget.date,
+        widget.mealIndex,
+        'baseline',
+      );
 
       if (newValue && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -222,6 +225,7 @@ class _MealCardItemState extends State<_MealCardItem> {
             builder: (_) => RecommendationDetailDialog(
               meal: meal,
               isEaten: _isEaten,
+              date: widget.date,
               onToggleEaten: (_) => _handleToggle(), // CHANGED
             ),
           );
@@ -289,11 +293,7 @@ class _MealCardItemState extends State<_MealCardItem> {
                         width: 64,
                         height: 64,
                         color: const Color.fromARGB(255, 122, 105, 95),
-                        child: Icon(
-                          mealIcon,
-                          color: Colors.white,
-                          size: 32,
-                        ),
+                        child: Icon(mealIcon, color: Colors.white, size: 32),
                       ),
                     ),
                   ],
