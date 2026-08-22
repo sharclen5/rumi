@@ -75,7 +75,7 @@ class _CalendarStripState extends State<CalendarStrip> {
     final start = DateTime(_visibleMonth.year, _visibleMonth.month, 1);
     final end = DateTime(_visibleMonth.year, _visibleMonth.month + 1, 0);
     final startId = '${widget.babyId}_${_fmt(start)}';
-    final endId = '${widget.babyId}_${_fmt(end)}';
+    final endId = '${widget.babyId}_${_fmt(end)}_baseline';
     return FirebaseFirestore.instance
         .collection('users')
         .doc(widget.uid)
