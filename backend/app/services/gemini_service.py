@@ -32,6 +32,34 @@ def _clean_json_text(text: str) -> str:
     return cleaned.strip()
 # END ADDED
 
+def _get_texture_instruction(corrected_age_in_months: int, tooth_count: int | None) -> str:
+    tooth_note = f" (gigi {tooth_count} buah)" if tooth_count is not None else ""
+
+    if corrected_age_in_months <= 8:
+        return (
+            f"Tekstur wajib halus dan lembut{tooth_note}: saring atau blender hingga "
+            f"berbentuk puree atau bubur saring. Bayi di usia ini belum bisa mengunyah, "
+            f"makanan harus bisa ditelan langsung dengan lidah."
+        )
+    elif corrected_age_in_months <= 11:
+        return (
+            f"Tekstur cincang halus atau lembek{tooth_note}: tidak perlu diblender penuh, "
+            f"cukup dicincang halus atau disaring kasar. Bayi sudah mulai belajar mengunyah "
+            f"tapi belum kuat, hindari potongan besar atau keras."
+        )
+    elif corrected_age_in_months <= 23:
+        return (
+            f"Tekstur cincang kasar atau finger food{tooth_note}: makanan bisa dipotong "
+            f"kecil-kecil atau dilunakkan, tidak perlu dihaluskan. Bayi sudah bisa "
+            f"mengunyah, dorong kemandirian makan."
+        )
+    else:
+        return (
+            f"Tekstur keluarga yang dilunakkan{tooth_note}: makanan keluarga biasa yang "
+            f"dipotong kecil atau sedikit dilunakkan. Hindari makanan keras, bulat, "
+            f"atau licin yang berisiko tersedak."
+        )
+
 def _get_single_day(
         baby_id: str, 
         age_in_months: int, 
@@ -60,9 +88,7 @@ def _get_single_day(
         'Sertakan slot ASI sesuai kebutuhan bayi.' if is_actively_breastfed
         else 'Bayi tidak lagi menyusu ASI, jangan sertakan slot ASI.'
     )
-    tooth_instruction = (
-        'Sesuaikan tekstur makanan dengan jumlah gigi bayi.' if tooth_count is not None else ''
-    )
+    tooth_instruction = _get_texture_instruction(corrected_age_in_months, tooth_count)
 
     prompt = MPASI_PROMPT.format(
         age_in_months=age_in_months,
@@ -208,11 +234,11 @@ def get_weekly_recommendation(
         print(f'[gemini_service] Day {i+1}/{days} saved to Firestore: {doc_id}')
 
         # extract non-ASI meal names as context for next day
-        previous_meals = [
+        previous_meals.extend([
             meal['name']
             for meal in parsed.get('meals', [])
             if meal.get('name') is not None
-        ]
+        ])
 
         results.append({'date': current_date, 'meals': parsed['meals']})
 
