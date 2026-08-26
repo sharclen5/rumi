@@ -258,7 +258,7 @@ class _SignInState extends State<SignIn> {
                               : const Text(
                                   'Kirim Link Reset',
                                   style: TextStyle(
-                                    color: Color(0xFF363434),
+                                    color: Color(0xFFFDF8F2),
                                     fontSize: 14,
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w500,
