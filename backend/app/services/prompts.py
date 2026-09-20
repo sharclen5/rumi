@@ -26,6 +26,8 @@ Gunakan usia koreksi sebagai acuan utama untuk menentukan jadwal dan tekstur MPA
 {asi_instruction}
 {tooth_instruction}
 
+Tentukan jadwal makan yang sesuai berdasarkan usia koreksi bayi sesuai panduan WHO dan IDAI.
+
 PENTING - Ketersediaan bahan:
 Gunakan HANYA bahan makanan yang mudah ditemukan di pasar tradisional, warung,
 atau supermarket umum di Indonesia, dan tidak hanya di perkotaan, 
