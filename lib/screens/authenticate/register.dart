@@ -72,7 +72,7 @@ class _RegisterState extends State<Register> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Register',
+                            'Buat Akun Baru',
                             style: TextStyle(
                               color: Color(0xFF363434),
                               fontSize: 27,
@@ -104,7 +104,7 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             validator: (val) => val == null || val.isEmpty
-                                ? 'Enter an email'
+                                ? 'Masukan email anda'
                                 : null,
                             onChanged: (val) => setState(() => email = val),
                           ),
@@ -120,7 +120,7 @@ class _RegisterState extends State<Register> {
                               fontWeight: FontWeight.w400,
                             ),
                             decoration: textInputDecoration.copyWith(
-                              labelText: 'First Name',
+                              labelText: 'Nama Depan',
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -132,7 +132,7 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             validator: (val) => val == null || val.isEmpty
-                                ? 'Enter your first name'
+                                ? 'Masukan nama depan anda'
                                 : null,
                             onChanged: (val) => setState(() => firstName = val),
                           ),
@@ -148,7 +148,7 @@ class _RegisterState extends State<Register> {
                               fontWeight: FontWeight.w400,
                             ),
                             decoration: textInputDecoration.copyWith(
-                              labelText: 'Last Name',
+                              labelText: 'Nama Belakang',
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -160,7 +160,7 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             validator: (val) => val == null || val.isEmpty
-                                ? 'Enter your last name'
+                                ? 'Masukan nama belakang anda'
                                 : null,
                             onChanged: (val) => setState(() => lastName = val),
                           ),
@@ -171,13 +171,13 @@ class _RegisterState extends State<Register> {
                                 ? null
                                 : gender, // null shows the hint
                             hint: const Text(
-                              'Select Gender',
+                              'Jenis Kelamin',
                             ), // shown when nothing is selected
                             validator: (val) => val == null || val.isEmpty
-                                ? 'Select your gender'
+                                ? 'Pilih jenis kelamin anda'
                                 : null,
                             decoration: textInputDecoration.copyWith(
-                              labelText: 'Select Gender',
+                              labelText: 'Jenis Kelamin',
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -191,11 +191,11 @@ class _RegisterState extends State<Register> {
                             items: const [
                               DropdownMenuItem(
                                 value: 'Male',
-                                child: Text('Male'),
+                                child: Text('Laki-laki'),
                               ),
                               DropdownMenuItem(
                                 value: 'Female',
-                                child: Text('Female'),
+                                child: Text('Perempuan'),
                               ),
                             ],
                             onChanged: (val) => setState(() => gender = val!),
@@ -212,7 +212,7 @@ class _RegisterState extends State<Register> {
                               fontWeight: FontWeight.w400,
                             ),
                             decoration: textInputDecoration.copyWith(
-                              labelText: 'Phone Number',
+                              labelText: 'Nomor Telepon',
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(10),
@@ -224,7 +224,7 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             validator: (val) => val == null || val.isEmpty
-                                ? 'Enter your phone number'
+                                ? 'Masukan nomor telepon anda'
                                 : null,
                             onChanged: (val) => setState(() => phone = val),
                           ),
@@ -265,7 +265,7 @@ class _RegisterState extends State<Register> {
                               ),
                             ),
                             validator: (val) => val == null || val.length < 6
-                                ? 'Enter a password with at least 6 characters'
+                                ? 'Masukan kata sandi dengan minimal 6 karakter'
                                 : null,
                             onChanged: (val) => setState(() => password = val),
                           ),
@@ -283,7 +283,7 @@ class _RegisterState extends State<Register> {
                                   backgroundColor: const Color(0xFF363434),
                                 ),
                                 child: const Text(
-                                  'Register',
+                                  'Daftar',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 15,
@@ -337,7 +337,7 @@ class _RegisterState extends State<Register> {
                           Row(
                             children: [
                               const Text(
-                                'Already have an account?',
+                                'Sudah punya akun?',
                                 style: TextStyle(
                                   color: Color(0xFF837E93),
                                   fontSize: 13,
@@ -349,7 +349,7 @@ class _RegisterState extends State<Register> {
                               InkWell(
                                 onTap: () => widget.toggleView(),
                                 child: const Text(
-                                  'Sign In',
+                                  'Masuk',
                                   style: TextStyle(
                                     color: Color(0xFF393939),
                                     fontSize: 13,
